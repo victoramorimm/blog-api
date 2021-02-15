@@ -10,6 +10,14 @@ export const makeFakeRequestWithoutName = (): HttpRequest => ({
   }
 })
 
+export const makeFakeRequestWithoutEmail = (): HttpRequest => ({
+  body: {
+    name: 'any_name',
+    password: 'any_password',
+    passwordConfirmation: 'any_password'
+  }
+})
+
 describe('SignUp Controller', () => {
   test('Should return 400 if no name is provided', async () => {
     const sut = new SignUpController()
@@ -21,6 +29,19 @@ describe('SignUp Controller', () => {
     expect(httpResponse).toEqual({
       statusCode: 400,
       body: new MissingParamError('name')
+    })
+  })
+
+  test('Should return 400 if no email is provided', async () => {
+    const sut = new SignUpController()
+
+    const httpRequest = makeFakeRequestWithoutEmail()
+
+    const httpResponse = await sut.handle(httpRequest)
+
+    expect(httpResponse).toEqual({
+      statusCode: 400,
+      body: new MissingParamError('email')
     })
   })
 })
