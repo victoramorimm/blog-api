@@ -1,3 +1,4 @@
+import { InvalidParamError } from '../../errors/invalid-param-error'
 import { MissingParamError } from '../../errors/missing-param-error'
 import { HttpRequest } from '../../protocols/http'
 import { SignUpController } from './signup-controller'
@@ -31,6 +32,15 @@ export const makeFakeRequestWithoutPasswordConfirmation = (): HttpRequest => ({
     name: 'any_name',
     email: 'any_email@mail.com',
     password: 'any_password'
+  }
+})
+
+export const makeFakeRequestWithPasswordConfirmationFailing = (): HttpRequest => ({
+  body: {
+    name: 'any_name',
+    email: 'any_email@mail.com',
+    password: 'any_password',
+    passwordConfirmation: 'different_password'
   }
 })
 
@@ -84,6 +94,19 @@ describe('SignUp Controller', () => {
     expect(httpResponse).toEqual({
       statusCode: 400,
       body: new MissingParamError('passwordConfirmation')
+    })
+  })
+
+  test('Should return 400 if password and passwordConfirmation are different', async () => {
+    const sut = new SignUpController()
+
+    const httpRequest = makeFakeRequestWithPasswordConfirmationFailing()
+
+    const httpResponse = await sut.handle(httpRequest)
+
+    expect(httpResponse).toEqual({
+      statusCode: 400,
+      body: new InvalidParamError('passwordConfirmation')
     })
   })
 })
