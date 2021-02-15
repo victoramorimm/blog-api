@@ -1,9 +1,7 @@
-interface HttpResponse {
-  statusCode: number
-}
+import { HttpRequest, HttpResponse } from '../../protocols/http'
 
 export class SignUpController {
-  async handle(httpRequest): Promise<HttpResponse> {
+  async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     return {
       statusCode: 400
     }
