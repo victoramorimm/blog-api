@@ -1,3 +1,4 @@
+import { MissingParamError } from '../../errors/missing-param-error'
 import { HttpRequest } from '../../protocols/http'
 import { SignUpController } from './signup-controller'
 
@@ -18,7 +19,8 @@ describe('SignUp Controller', () => {
     const httpResponse = await sut.handle(httpRequest)
 
     expect(httpResponse).toEqual({
-      statusCode: 400
+      statusCode: 400,
+      body: new MissingParamError('name')
     })
   })
 })
