@@ -1,5 +1,6 @@
 import { InvalidParamError } from '../../errors/invalid-param-error'
 import { MissingParamError } from '../../errors/missing-param-error'
+import { EmailValidator } from '../../protocols/email-validator'
 import { HttpRequest } from '../../protocols/http'
 import { SignUpController } from './signup-controller'
 
@@ -44,9 +45,18 @@ export const makeFakeRequestWithPasswordConfirmationFailing = (): HttpRequest =>
   }
 })
 
+export const makeFakeValidRequest = (): HttpRequest => ({
+  body: {
+    name: 'any_name',
+    email: 'any_email@mail.com',
+    password: 'any_password',
+    passwordConfirmation: 'any_password'
+  }
+})
+
 describe('SignUp Controller', () => {
   test('Should return 400 if no name is provided', async () => {
-    const sut = new SignUpController()
+    const sut = new SignUpController(null)
 
     const httpRequest = makeFakeRequestWithoutName()
 
@@ -59,7 +69,7 @@ describe('SignUp Controller', () => {
   })
 
   test('Should return 400 if no email is provided', async () => {
-    const sut = new SignUpController()
+    const sut = new SignUpController(null)
 
     const httpRequest = makeFakeRequestWithoutEmail()
 
@@ -72,7 +82,7 @@ describe('SignUp Controller', () => {
   })
 
   test('Should return 400 if no password is provided', async () => {
-    const sut = new SignUpController()
+    const sut = new SignUpController(null)
 
     const httpRequest = makeFakeRequestWithoutPassword()
 
@@ -85,7 +95,7 @@ describe('SignUp Controller', () => {
   })
 
   test('Should return 400 if no passwordConfirmation is provided', async () => {
-    const sut = new SignUpController()
+    const sut = new SignUpController(null)
 
     const httpRequest = makeFakeRequestWithoutPasswordConfirmation()
 
@@ -98,7 +108,7 @@ describe('SignUp Controller', () => {
   })
 
   test('Should return 400 if password and passwordConfirmation are different', async () => {
-    const sut = new SignUpController()
+    const sut = new SignUpController(null)
 
     const httpRequest = makeFakeRequestWithPasswordConfirmationFailing()
 
@@ -108,5 +118,25 @@ describe('SignUp Controller', () => {
       statusCode: 400,
       body: new InvalidParamError('passwordConfirmation')
     })
+  })
+
+  test('Should call EmailValidator with correct email', async () => {
+    class EmailValidatorStub implements EmailValidator {
+      validate(email: string): boolean {
+        return true
+      }
+    }
+
+    const emailValidatorStub = new EmailValidatorStub()
+
+    const validateSpy = jest.spyOn(emailValidatorStub, 'validate')
+
+    const sut = new SignUpController(emailValidatorStub)
+
+    const httpRequest = makeFakeValidRequest()
+
+    await sut.handle(httpRequest)
+
+    expect(validateSpy).toHaveBeenCalledWith('any_email@mail.com')
   })
 })
