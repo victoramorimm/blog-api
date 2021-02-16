@@ -1,3 +1,4 @@
+import { Hasher } from '../../../domain/protocols/hasher'
 import { InvalidParamError } from '../../errors/invalid-param-error'
 import { MissingParamError } from '../../errors/missing-param-error'
 import { ServerError } from '../../errors/server-error'
@@ -6,7 +7,10 @@ import { EmailValidator } from '../../protocols/email-validator'
 import { HttpRequest, HttpResponse } from '../../protocols/http'
 
 export class SignUpController implements Controller {
-  constructor(private readonly emailValidator: EmailValidator) {}
+  constructor(
+    private readonly emailValidator: EmailValidator,
+    private readonly hasher: Hasher
+  ) {}
 
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
@@ -41,6 +45,8 @@ export class SignUpController implements Controller {
           body: new InvalidParamError('email')
         }
       }
+
+      await this.hasher.hash(httpRequest.body.password)
 
       return null
     } catch (error) {
