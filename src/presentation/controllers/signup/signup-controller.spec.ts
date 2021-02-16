@@ -54,9 +54,37 @@ export const makeFakeValidRequest = (): HttpRequest => ({
   }
 })
 
+const makeEmailValidatorStub = (): EmailValidator => {
+  class EmailValidatorStub implements EmailValidator {
+    validate(email: string): boolean {
+      return true
+    }
+  }
+
+  return new EmailValidatorStub()
+}
+
+type SutTypes = {
+  sut: SignUpController
+  emailValidatorStub: EmailValidator
+}
+
+const makeSut = (): SutTypes => {
+  const emailValidatorStub = makeEmailValidatorStub()
+
+  jest.spyOn(emailValidatorStub, 'validate').mockReturnValueOnce(false)
+
+  const sut = new SignUpController(emailValidatorStub)
+
+  return {
+    sut,
+    emailValidatorStub
+  }
+}
+
 describe('SignUp Controller', () => {
   test('Should return 400 if no name is provided', async () => {
-    const sut = new SignUpController(null)
+    const { sut } = makeSut()
 
     const httpRequest = makeFakeRequestWithoutName()
 
@@ -69,7 +97,7 @@ describe('SignUp Controller', () => {
   })
 
   test('Should return 400 if no email is provided', async () => {
-    const sut = new SignUpController(null)
+    const { sut } = makeSut()
 
     const httpRequest = makeFakeRequestWithoutEmail()
 
@@ -82,7 +110,7 @@ describe('SignUp Controller', () => {
   })
 
   test('Should return 400 if no password is provided', async () => {
-    const sut = new SignUpController(null)
+    const { sut } = makeSut()
 
     const httpRequest = makeFakeRequestWithoutPassword()
 
@@ -95,7 +123,7 @@ describe('SignUp Controller', () => {
   })
 
   test('Should return 400 if no passwordConfirmation is provided', async () => {
-    const sut = new SignUpController(null)
+    const { sut } = makeSut()
 
     const httpRequest = makeFakeRequestWithoutPasswordConfirmation()
 
@@ -108,7 +136,7 @@ describe('SignUp Controller', () => {
   })
 
   test('Should return 400 if password and passwordConfirmation are different', async () => {
-    const sut = new SignUpController(null)
+    const { sut } = makeSut()
 
     const httpRequest = makeFakeRequestWithPasswordConfirmationFailing()
 
@@ -121,17 +149,9 @@ describe('SignUp Controller', () => {
   })
 
   test('Should call EmailValidator with correct email', async () => {
-    class EmailValidatorStub implements EmailValidator {
-      validate(email: string): boolean {
-        return true
-      }
-    }
-
-    const emailValidatorStub = new EmailValidatorStub()
+    const { sut, emailValidatorStub } = makeSut()
 
     const validateSpy = jest.spyOn(emailValidatorStub, 'validate')
-
-    const sut = new SignUpController(emailValidatorStub)
 
     const httpRequest = makeFakeValidRequest()
 
