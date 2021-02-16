@@ -30,14 +30,18 @@ export class SignUpController implements Controller {
         }
       }
 
-      if (httpRequest.body.password !== httpRequest.body.passwordConfirmation) {
+      const { password, passwordConfirmation } = httpRequest.body
+
+      if (password !== passwordConfirmation) {
         return {
           statusCode: 400,
           body: new InvalidParamError('passwordConfirmation')
         }
       }
 
-      const isEmailValid = this.emailValidator.validate(httpRequest.body.email)
+      const { email } = httpRequest.body
+
+      const isEmailValid = this.emailValidator.validate(email)
 
       if (!isEmailValid) {
         return {
@@ -46,7 +50,7 @@ export class SignUpController implements Controller {
         }
       }
 
-      await this.hasher.hash(httpRequest.body.password)
+      await this.hasher.hash(password)
 
       return null
     } catch (error) {
