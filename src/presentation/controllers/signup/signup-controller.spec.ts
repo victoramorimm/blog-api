@@ -197,4 +197,18 @@ describe('SignUp Controller', () => {
 
     expect(hashSpy).toHaveBeenCalledWith('any_password')
   })
+
+  test('Should return 500 if Hasher throws', async () => {
+    const { sut, hasherStub } = makeSut()
+
+    jest.spyOn(hasherStub, 'hash').mockImplementationOnce(() => {
+      throw new Error()
+    })
+
+    const httpRequest = makeFakeValidRequest()
+
+    const httpResponse = await sut.handle(httpRequest)
+
+    expect(httpResponse).toEqual(serverError(new ServerError()))
+  })
 })
