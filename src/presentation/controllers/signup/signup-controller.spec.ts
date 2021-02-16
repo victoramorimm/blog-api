@@ -1,3 +1,4 @@
+import { Hasher } from '../../../domain/protocols/hasher'
 import { InvalidParamError } from '../../errors/invalid-param-error'
 import { MissingParamError } from '../../errors/missing-param-error'
 import { ServerError } from '../../errors/server-error'
@@ -65,19 +66,33 @@ const makeEmailValidatorStub = (): EmailValidator => {
   return new EmailValidatorStub()
 }
 
+const makeHasherStub = (): Hasher => {
+  class HasherStub implements Hasher {
+    async hash(value: string): Promise<string> {
+      return 'hashed_value'
+    }
+  }
+
+  return new HasherStub()
+}
+
 type SutTypes = {
   sut: SignUpController
   emailValidatorStub: EmailValidator
+  hasherStub: Hasher
 }
 
 const makeSut = (): SutTypes => {
   const emailValidatorStub = makeEmailValidatorStub()
 
-  const sut = new SignUpController(emailValidatorStub)
+  const hasherStub = makeHasherStub()
+
+  const sut = new SignUpController(emailValidatorStub, hasherStub)
 
   return {
     sut,
-    emailValidatorStub
+    emailValidatorStub,
+    hasherStub
   }
 }
 
@@ -189,5 +204,17 @@ describe('SignUp Controller', () => {
       statusCode: 500,
       body: new ServerError()
     })
+  })
+
+  test('Should call Hasher with correct password', async () => {
+    const { sut, hasherStub } = makeSut()
+
+    const hashSpy = jest.spyOn(hasherStub, 'hash')
+
+    const httpRequest = makeFakeValidRequest()
+
+    await sut.handle(httpRequest)
+
+    expect(hashSpy).toHaveBeenCalledWith('any_password')
   })
 })
