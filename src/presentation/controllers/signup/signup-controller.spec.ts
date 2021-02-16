@@ -1,11 +1,7 @@
-import { Hasher } from '../../../domain/protocols/hasher'
-import { InvalidParamError } from '../../errors/invalid-param-error'
-import { MissingParamError } from '../../errors/missing-param-error'
-import { ServerError } from '../../errors/server-error'
-import { badRequest, serverError } from '../../helpers/http'
-import { EmailValidator } from '../../protocols/email-validator'
-import { HttpRequest } from '../../protocols/http'
 import { SignUpController } from './signup-controller'
+import { Hasher, EmailValidator, HttpRequest } from './signup-protocols'
+import { InvalidParamError, MissingParamError, ServerError } from '../../errors'
+import { badRequest, serverError } from '../../helpers/http'
 
 export const makeFakeRequestWithoutName = (): HttpRequest => ({
   body: {
