@@ -1,4 +1,5 @@
 import { Hasher } from '../../../domain/protocols/hasher'
+import { AddAccount } from '../../../domain/usecases/add-account'
 import { InvalidParamError } from '../../errors/invalid-param-error'
 import { MissingParamError } from '../../errors/missing-param-error'
 import { ServerError } from '../../errors/server-error'
@@ -10,7 +11,8 @@ import { HttpRequest, HttpResponse } from '../../protocols/http'
 export class SignUpController implements Controller {
   constructor(
     private readonly emailValidator: EmailValidator,
-    private readonly hasher: Hasher
+    private readonly hasher: Hasher,
+    private readonly addAccount: AddAccount
   ) {}
 
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
@@ -28,13 +30,11 @@ export class SignUpController implements Controller {
         }
       }
 
-      const { password, passwordConfirmation } = httpRequest.body
+      const { email, name, password, passwordConfirmation } = httpRequest.body
 
       if (password !== passwordConfirmation) {
         return badRequest(new InvalidParamError('passwordConfirmation'))
       }
-
-      const { email } = httpRequest.body
 
       const isEmailValid = this.emailValidator.validate(email)
 
@@ -43,6 +43,12 @@ export class SignUpController implements Controller {
       }
 
       await this.hasher.hash(password)
+
+      await this.addAccount.add({
+        name,
+        email,
+        password
+      })
 
       return null
     } catch (error) {
