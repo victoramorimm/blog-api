@@ -1,3 +1,4 @@
+import { Hasher } from '../../domain/protocols/hasher'
 import { AddAccount } from '../../domain/usecases/add-account'
 import { InvalidParamError } from '../../presentation/errors'
 import { badRequest } from '../../presentation/helpers/http'
@@ -24,19 +25,33 @@ const makeEmailValidatorStub = (): EmailValidator => {
   return new EmailValidatorStub()
 }
 
+const makeHasherStub = (): Hasher => {
+  class HasherStub implements Hasher {
+    async hash(value: string): Promise<string> {
+      return 'hashed_value'
+    }
+  }
+
+  return new HasherStub()
+}
+
 type SutTypes = {
   sut: AddAccount
   emailValidatorStub: EmailValidator
+  hasherStub: Hasher
 }
 
 const makeSut = (): SutTypes => {
   const emailValidatorStub = makeEmailValidatorStub()
 
-  const sut = new DbAddAccount(emailValidatorStub)
+  const hasherStub = makeHasherStub()
+
+  const sut = new DbAddAccount(emailValidatorStub, hasherStub)
 
   return {
     sut,
-    emailValidatorStub
+    emailValidatorStub,
+    hasherStub
   }
 }
 
@@ -77,5 +92,17 @@ describe('DbAddAccount Usecase', () => {
     const promise = sut.add(httpRequest)
 
     await expect(promise).rejects.toThrow()
+  })
+
+  test('Should call Hasher with correct password', async () => {
+    const { sut, hasherStub } = makeSut()
+
+    const hashSpy = jest.spyOn(hasherStub, 'hash')
+
+    const httpRequest = makeFakeValidRequest()
+
+    await sut.add(httpRequest)
+
+    expect(hashSpy).toHaveBeenCalledWith('any_password')
   })
 })
