@@ -1,4 +1,6 @@
 import { AddAccount } from '../../domain/usecases/add-account'
+import { InvalidParamError } from '../../presentation/errors'
+import { badRequest } from '../../presentation/helpers/http'
 import { EmailValidator } from '../../presentation/protocols/email-validator'
 import { HttpRequest } from '../../presentation/protocols/http'
 import { DbAddAccount } from './db-add-account'
@@ -49,5 +51,17 @@ describe('DbAddAccount Usecase', () => {
     await sut.add(httpRequest)
 
     expect(validateSpy).toHaveBeenCalledWith('any_email@mail.com')
+  })
+
+  test('Should return 400 if EmailValidator returns false', async () => {
+    const { sut, emailValidatorStub } = makeSut()
+
+    jest.spyOn(emailValidatorStub, 'validate').mockReturnValueOnce(false)
+
+    const httpRequest = makeFakeValidRequest()
+
+    const httpResponse = await sut.add(httpRequest)
+
+    expect(httpResponse).toEqual(badRequest(new InvalidParamError('email')))
   })
 })

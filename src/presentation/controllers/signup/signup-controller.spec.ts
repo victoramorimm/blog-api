@@ -68,13 +68,6 @@ const makeEmailValidatorStub = (): EmailValidator => {
   return new EmailValidatorStub()
 }
 
-const makeFakeAccountReturnedByAddAccount = (): any => ({
-  id: 'any_id',
-  name: 'any_name',
-  email: 'any_email',
-  password: 'any_password'
-})
-
 const makeHasherStub = (): Hasher => {
   class HasherStub implements Hasher {
     async hash(value: string): Promise<string> {
@@ -84,6 +77,13 @@ const makeHasherStub = (): Hasher => {
 
   return new HasherStub()
 }
+
+const makeFakeAccountReturnedByAddAccount = (): any => ({
+  id: 'any_id',
+  name: 'any_name',
+  email: 'any_email',
+  password: 'any_password'
+})
 
 const makeAddAccountStub = (): AddAccount => {
   class AddAccountStub implements AddAccount {
@@ -178,18 +178,6 @@ describe('SignUp Controller', () => {
     expect(httpResponse).toEqual(
       badRequest(new InvalidParamError('passwordConfirmation'))
     )
-  })
-
-  test('Should return 400 if EmailValidator returns false', async () => {
-    const { sut, emailValidatorStub } = makeSut()
-
-    jest.spyOn(emailValidatorStub, 'validate').mockReturnValueOnce(false)
-
-    const httpRequest = makeFakeValidRequest()
-
-    const httpResponse = await sut.handle(httpRequest)
-
-    expect(httpResponse).toEqual(badRequest(new InvalidParamError('email')))
   })
 
   test('Should return 500 if EmailValidator throws', async () => {
