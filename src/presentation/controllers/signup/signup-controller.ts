@@ -50,7 +50,9 @@ export class SignUpController implements Controller {
         password
       })
 
-      return null
+      return {
+        statusCode: 200
+      }
     } catch (error) {
       return serverError(new ServerError())
     }
