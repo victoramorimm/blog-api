@@ -1,10 +1,5 @@
 import { SignUpController } from './signup-controller'
-import {
-  Hasher,
-  EmailValidator,
-  HttpRequest,
-  AddAccount
-} from './signup-protocols'
+import { HttpRequest, AddAccount } from './signup-protocols'
 import { InvalidParamError, MissingParamError, ServerError } from '../../errors'
 import { badRequest, ok, serverError } from '../../helpers/http'
 
@@ -58,26 +53,6 @@ export const makeFakeValidRequest = (): HttpRequest => ({
   }
 })
 
-const makeEmailValidatorStub = (): EmailValidator => {
-  class EmailValidatorStub implements EmailValidator {
-    validate(email: string): boolean {
-      return true
-    }
-  }
-
-  return new EmailValidatorStub()
-}
-
-const makeHasherStub = (): Hasher => {
-  class HasherStub implements Hasher {
-    async hash(value: string): Promise<string> {
-      return 'hashed_value'
-    }
-  }
-
-  return new HasherStub()
-}
-
 const makeFakeAccountReturnedByAddAccount = (): any => ({
   id: 'any_id',
   name: 'any_name',
@@ -99,28 +74,16 @@ const makeAddAccountStub = (): AddAccount => {
 
 type SutTypes = {
   sut: SignUpController
-  emailValidatorStub: EmailValidator
-  hasherStub: Hasher
   addAccountStub: AddAccount
 }
 
 const makeSut = (): SutTypes => {
-  const emailValidatorStub = makeEmailValidatorStub()
-
-  const hasherStub = makeHasherStub()
-
   const addAccountStub = makeAddAccountStub()
 
-  const sut = new SignUpController(
-    emailValidatorStub,
-    hasherStub,
-    addAccountStub
-  )
+  const sut = new SignUpController(addAccountStub)
 
   return {
     sut,
-    emailValidatorStub,
-    hasherStub,
     addAccountStub
   }
 }
@@ -178,46 +141,6 @@ describe('SignUp Controller', () => {
     expect(httpResponse).toEqual(
       badRequest(new InvalidParamError('passwordConfirmation'))
     )
-  })
-
-  test('Should return 500 if EmailValidator throws', async () => {
-    const { sut, emailValidatorStub } = makeSut()
-
-    jest.spyOn(emailValidatorStub, 'validate').mockImplementationOnce(() => {
-      throw new Error()
-    })
-
-    const httpRequest = makeFakeValidRequest()
-
-    const httpResponse = await sut.handle(httpRequest)
-
-    expect(httpResponse).toEqual(serverError(new ServerError()))
-  })
-
-  test('Should call Hasher with correct password', async () => {
-    const { sut, hasherStub } = makeSut()
-
-    const hashSpy = jest.spyOn(hasherStub, 'hash')
-
-    const httpRequest = makeFakeValidRequest()
-
-    await sut.handle(httpRequest)
-
-    expect(hashSpy).toHaveBeenCalledWith('any_password')
-  })
-
-  test('Should return 500 if Hasher throws', async () => {
-    const { sut, hasherStub } = makeSut()
-
-    jest.spyOn(hasherStub, 'hash').mockImplementationOnce(() => {
-      throw new Error()
-    })
-
-    const httpRequest = makeFakeValidRequest()
-
-    const httpResponse = await sut.handle(httpRequest)
-
-    expect(httpResponse).toEqual(serverError(new ServerError()))
   })
 
   test('Should call AddAccount with correct values', async () => {
