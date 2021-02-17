@@ -1,7 +1,7 @@
+import { DbAddAccount } from './db-add-account'
 import { Hasher } from '../../domain/protocols/hasher'
 import { AddAccount, AddAccountModel } from '../../domain/usecases/add-account'
 import { EmailValidator } from '../../presentation/protocols/email-validator'
-import { DbAddAccount } from './db-add-account'
 
 export const makeFakeAddAccountData = (): AddAccountModel => ({
   name: 'any_name',
@@ -55,9 +55,9 @@ describe('DbAddAccount Usecase', () => {
 
     const validateSpy = jest.spyOn(emailValidatorStub, 'validate')
 
-    const httpRequest = makeFakeAddAccountData()
+    const fakeAccountData = makeFakeAddAccountData()
 
-    await sut.add(httpRequest)
+    await sut.add(fakeAccountData)
 
     expect(validateSpy).toHaveBeenCalledWith('any_email@mail.com')
   })
@@ -67,11 +67,11 @@ describe('DbAddAccount Usecase', () => {
 
     jest.spyOn(emailValidatorStub, 'validate').mockReturnValueOnce(false)
 
-    const httpRequest = makeFakeAddAccountData()
+    const fakeAccountData = makeFakeAddAccountData()
 
-    const httpResponse = await sut.add(httpRequest)
+    const account = await sut.add(fakeAccountData)
 
-    expect(httpResponse).toBeNull()
+    expect(account).toBeNull()
   })
 
   test('Should throw if EmailValidator throws', async () => {
@@ -81,9 +81,9 @@ describe('DbAddAccount Usecase', () => {
       throw new Error()
     })
 
-    const httpRequest = makeFakeAddAccountData()
+    const fakeAccountData = makeFakeAddAccountData()
 
-    const promise = sut.add(httpRequest)
+    const promise = sut.add(fakeAccountData)
 
     await expect(promise).rejects.toThrow()
   })
@@ -93,9 +93,9 @@ describe('DbAddAccount Usecase', () => {
 
     const hashSpy = jest.spyOn(hasherStub, 'hash')
 
-    const httpRequest = makeFakeAddAccountData()
+    const fakeAccountData = makeFakeAddAccountData()
 
-    await sut.add(httpRequest)
+    await sut.add(fakeAccountData)
 
     expect(hashSpy).toHaveBeenCalledWith('any_password')
   })
@@ -107,9 +107,9 @@ describe('DbAddAccount Usecase', () => {
       throw new Error()
     })
 
-    const httpRequest = makeFakeAddAccountData()
+    const fakeAccountData = makeFakeAddAccountData()
 
-    const promise = sut.add(httpRequest)
+    const promise = sut.add(fakeAccountData)
 
     await expect(promise).rejects.toThrow()
   })
