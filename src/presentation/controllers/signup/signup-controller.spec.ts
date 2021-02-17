@@ -64,6 +64,13 @@ const makeEmailValidatorStub = (): EmailValidator => {
   return new EmailValidatorStub()
 }
 
+const makeFakeAccountReturnedByAddAccount = (): any => ({
+  id: 'any_id',
+  name: 'any_name',
+  email: 'any_email',
+  password: 'any_password'
+})
+
 const makeHasherStub = (): Hasher => {
   class HasherStub implements Hasher {
     async hash(value: string): Promise<string> {
@@ -77,13 +84,7 @@ const makeHasherStub = (): Hasher => {
 const makeAddAccountStub = (): AddAccount => {
   class AddAccountStub implements AddAccount {
     async add(value: any): Promise<any> {
-      // Mover para um factory o fakeAccount creation
-      const fakeAccount = {
-        id: 'any_id',
-        name: 'any_name',
-        email: 'any_email',
-        password: 'any_password'
-      }
+      const fakeAccount = makeFakeAccountReturnedByAddAccount()
 
       return await new Promise((resolve) => resolve(fakeAccount))
     }
