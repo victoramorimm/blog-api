@@ -180,18 +180,6 @@ describe('SignUp Controller', () => {
     )
   })
 
-  test('Should call EmailValidator with correct email', async () => {
-    const { sut, emailValidatorStub } = makeSut()
-
-    const validateSpy = jest.spyOn(emailValidatorStub, 'validate')
-
-    const httpRequest = makeFakeValidRequest()
-
-    await sut.handle(httpRequest)
-
-    expect(validateSpy).toHaveBeenCalledWith('any_email@mail.com')
-  })
-
   test('Should return 400 if EmailValidator returns false', async () => {
     const { sut, emailValidatorStub } = makeSut()
 
