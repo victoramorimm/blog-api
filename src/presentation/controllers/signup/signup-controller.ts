@@ -44,14 +44,15 @@ export class SignUpController implements Controller {
 
       await this.hasher.hash(password)
 
-      await this.addAccount.add({
+      const account = await this.addAccount.add({
         name,
         email,
         password
       })
 
       return {
-        statusCode: 200
+        statusCode: 200,
+        body: account
       }
     } catch (error) {
       return serverError(new ServerError())
