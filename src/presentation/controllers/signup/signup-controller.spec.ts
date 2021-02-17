@@ -164,6 +164,20 @@ describe('SignUp Controller', () => {
     })
   })
 
+  test('Should return 400 if AddAccount returns null', async () => {
+    const { sut, addAccountStub } = makeSut()
+
+    jest
+      .spyOn(addAccountStub, 'add')
+      .mockReturnValueOnce(new Promise((resolve) => resolve(null)))
+
+    const httpRequest = makeFakeValidRequest()
+
+    const httpResponse = await sut.handle(httpRequest)
+
+    expect(httpResponse).toEqual(badRequest(new Error()))
+  })
+
   test('Should return 500 if AddAccount throws', async () => {
     const { sut, addAccountStub } = makeSut()
 
