@@ -1,9 +1,12 @@
 import { SignUpController } from './signup-controller'
-import { HttpRequest, AddAccount } from './signup-protocols'
+import {
+  HttpRequest,
+  AddAccount,
+  AddAccountModel,
+  AccountReturnedByDbModel
+} from './signup-protocols'
 import { InvalidParamError, MissingParamError, ServerError } from '../../errors'
 import { badRequest, ok, serverError } from '../../helpers/http'
-import { AddAccountModel } from '../../../domain/usecases/add-account'
-import { AccountReturnedByDbModel } from '../../../domain/models/account-returned-by-db'
 
 export const makeFakeRequestWithoutName = (): HttpRequest => ({
   body: {
