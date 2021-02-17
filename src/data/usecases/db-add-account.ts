@@ -1,7 +1,6 @@
+import { AccountReturnedByDbModel } from '../../domain/models/account-returned-by-db'
 import { Hasher } from '../../domain/protocols/hasher'
-import { AddAccount } from '../../domain/usecases/add-account'
-import { InvalidParamError } from '../../presentation/errors'
-import { badRequest } from '../../presentation/helpers/http'
+import { AddAccount, AddAccountModel } from '../../domain/usecases/add-account'
 import { EmailValidator } from '../../presentation/protocols/email-validator'
 
 export class DbAddAccount implements AddAccount {
@@ -10,15 +9,13 @@ export class DbAddAccount implements AddAccount {
     private readonly hasher: Hasher
   ) {}
 
-  async add(value: any): Promise<any> {
-    const { email, password } = value.body
+  async add(accountData: AddAccountModel): Promise<AccountReturnedByDbModel> {
+    const { email, password } = accountData
 
-    const isEmailValid = this.emailValidator.validate(email)
-
-    if (!isEmailValid) {
-      return badRequest(new InvalidParamError('email'))
-    }
+    this.emailValidator.validate(email)
 
     await this.hasher.hash(password)
+
+    return null
   }
 }

@@ -2,6 +2,8 @@ import { SignUpController } from './signup-controller'
 import { HttpRequest, AddAccount } from './signup-protocols'
 import { InvalidParamError, MissingParamError, ServerError } from '../../errors'
 import { badRequest, ok, serverError } from '../../helpers/http'
+import { AddAccountModel } from '../../../domain/usecases/add-account'
+import { AccountReturnedByDbModel } from '../../../domain/models/account-returned-by-db'
 
 export const makeFakeRequestWithoutName = (): HttpRequest => ({
   body: {
@@ -53,7 +55,7 @@ export const makeFakeValidRequest = (): HttpRequest => ({
   }
 })
 
-const makeFakeAccountReturnedByAddAccount = (): any => ({
+const makeFakeAccountReturnedByAddAccount = (): AccountReturnedByDbModel => ({
   id: 'any_id',
   name: 'any_name',
   email: 'any_email',
@@ -62,7 +64,7 @@ const makeFakeAccountReturnedByAddAccount = (): any => ({
 
 const makeAddAccountStub = (): AddAccount => {
   class AddAccountStub implements AddAccount {
-    async add(value: any): Promise<any> {
+    async add(accountData: AddAccountModel): Promise<AccountReturnedByDbModel> {
       const fakeAccount = makeFakeAccountReturnedByAddAccount()
 
       return await new Promise((resolve) => resolve(fakeAccount))

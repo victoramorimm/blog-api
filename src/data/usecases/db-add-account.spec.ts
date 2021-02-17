@@ -1,18 +1,12 @@
 import { Hasher } from '../../domain/protocols/hasher'
-import { AddAccount } from '../../domain/usecases/add-account'
-import { InvalidParamError } from '../../presentation/errors'
-import { badRequest } from '../../presentation/helpers/http'
+import { AddAccount, AddAccountModel } from '../../domain/usecases/add-account'
 import { EmailValidator } from '../../presentation/protocols/email-validator'
-import { HttpRequest } from '../../presentation/protocols/http'
 import { DbAddAccount } from './db-add-account'
 
-export const makeFakeValidRequest = (): HttpRequest => ({
-  body: {
-    name: 'any_name',
-    email: 'any_email@mail.com',
-    password: 'any_password',
-    passwordConfirmation: 'any_password'
-  }
+export const makeFakeAddAccountData = (): AddAccountModel => ({
+  name: 'any_name',
+  email: 'any_email@mail.com',
+  password: 'any_password'
 })
 
 const makeEmailValidatorStub = (): EmailValidator => {
@@ -61,23 +55,23 @@ describe('DbAddAccount Usecase', () => {
 
     const validateSpy = jest.spyOn(emailValidatorStub, 'validate')
 
-    const httpRequest = makeFakeValidRequest()
+    const httpRequest = makeFakeAddAccountData()
 
     await sut.add(httpRequest)
 
     expect(validateSpy).toHaveBeenCalledWith('any_email@mail.com')
   })
 
-  test('Should return 400 if EmailValidator returns false', async () => {
+  test('Should return null if EmailValidator returns false', async () => {
     const { sut, emailValidatorStub } = makeSut()
 
     jest.spyOn(emailValidatorStub, 'validate').mockReturnValueOnce(false)
 
-    const httpRequest = makeFakeValidRequest()
+    const httpRequest = makeFakeAddAccountData()
 
     const httpResponse = await sut.add(httpRequest)
 
-    expect(httpResponse).toEqual(badRequest(new InvalidParamError('email')))
+    expect(httpResponse).toBeNull()
   })
 
   test('Should throw if EmailValidator throws', async () => {
@@ -87,7 +81,7 @@ describe('DbAddAccount Usecase', () => {
       throw new Error()
     })
 
-    const httpRequest = makeFakeValidRequest()
+    const httpRequest = makeFakeAddAccountData()
 
     const promise = sut.add(httpRequest)
 
@@ -99,7 +93,7 @@ describe('DbAddAccount Usecase', () => {
 
     const hashSpy = jest.spyOn(hasherStub, 'hash')
 
-    const httpRequest = makeFakeValidRequest()
+    const httpRequest = makeFakeAddAccountData()
 
     await sut.add(httpRequest)
 
@@ -113,7 +107,7 @@ describe('DbAddAccount Usecase', () => {
       throw new Error()
     })
 
-    const httpRequest = makeFakeValidRequest()
+    const httpRequest = makeFakeAddAccountData()
 
     const promise = sut.add(httpRequest)
 
