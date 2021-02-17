@@ -64,4 +64,18 @@ describe('DbAddAccount Usecase', () => {
 
     expect(httpResponse).toEqual(badRequest(new InvalidParamError('email')))
   })
+
+  test('Should throw if EmailValidator throws', async () => {
+    const { sut, emailValidatorStub } = makeSut()
+
+    jest.spyOn(emailValidatorStub, 'validate').mockImplementationOnce(() => {
+      throw new Error()
+    })
+
+    const httpRequest = makeFakeValidRequest()
+
+    const promise = sut.add(httpRequest)
+
+    await expect(promise).rejects.toThrow()
+  })
 })
