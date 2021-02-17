@@ -1,8 +1,12 @@
 import { SignUpController } from './signup-controller'
-import { Hasher, EmailValidator, HttpRequest } from './signup-protocols'
+import {
+  Hasher,
+  EmailValidator,
+  HttpRequest,
+  AddAccount
+} from './signup-protocols'
 import { InvalidParamError, MissingParamError, ServerError } from '../../errors'
-import { badRequest, serverError } from '../../helpers/http'
-import { AddAccount } from '../../../domain/usecases/add-account'
+import { badRequest, ok, serverError } from '../../helpers/http'
 
 export const makeFakeRequestWithoutName = (): HttpRequest => ({
   body: {
@@ -279,9 +283,6 @@ describe('SignUp Controller', () => {
 
     const httpResponse = await sut.handle(httpRequest)
 
-    expect(httpResponse).toEqual({
-      statusCode: 200,
-      body: fakeAccount
-    })
+    expect(httpResponse).toEqual(ok(fakeAccount))
   })
 })
