@@ -1,9 +1,12 @@
-import { AccountReturnedByDbModel } from '../../domain/models/account-returned-by-db'
-import { Hasher } from '../../domain/protocols/hasher'
-import { AddAccount, AddAccountModel } from '../../domain/usecases/add-account'
+import {
+  AccountReturnedByDbModel,
+  Hasher,
+  AddAccount,
+  AddAccountModel,
+  AddAccountRepository,
+  LoadAccountByEmailRepository
+} from './db-add-account-protocols'
 import { EmailValidator } from '../../presentation/protocols/email-validator'
-import { AddAccountRepository } from '../protocols/add-account-repository'
-import { LoadAccountByEmailRepository } from '../protocols/load-account-by-email-repository'
 
 export class DbAddAccount implements AddAccount {
   constructor(

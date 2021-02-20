@@ -1,10 +1,14 @@
 import { DbAddAccount } from './db-add-account'
-import { Hasher } from '../../domain/protocols/hasher'
-import { AddAccount, AddAccountModel } from '../../domain/usecases/add-account'
+import {
+  Hasher,
+  AddAccount,
+  AddAccountModel,
+  AccountReturnedByDbModel,
+  LoadAccountByEmailRepository,
+  AddAccountRepository
+} from './db-add-account-protocols'
+// To do: Mover a interface EmailValidator para alguma outra camada.
 import { EmailValidator } from '../../presentation/protocols/email-validator'
-import { AccountReturnedByDbModel } from '../../domain/models/account-returned-by-db'
-import { LoadAccountByEmailRepository } from '../protocols/load-account-by-email-repository'
-import { AddAccountRepository } from '../protocols/add-account-repository'
 
 export const makeFakeAddAccountData = (): AddAccountModel => ({
   name: 'any_name',
