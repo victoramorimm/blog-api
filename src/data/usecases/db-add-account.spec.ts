@@ -31,16 +31,18 @@ const makeHasherStub = (): Hasher => {
   return new HasherStub()
 }
 
+const makeFakeAccountReturnedByLoadAccountByEmailRepositoryStub = (): AccountReturnedByDbModel => ({
+  id: 'any_id',
+  name: 'any_name',
+  email: 'any_email',
+  password: 'any_password'
+})
+
 const makeLoadAccountByEmailRepositoryStub = (): LoadAccountByEmailRepository => {
   class LoadAccountByEmailRepositoryStub
     implements LoadAccountByEmailRepositoryStub {
     async loadByEmail(value: string): Promise<AccountReturnedByDbModel> {
-      const fakeAccount = {
-        id: 'any_id',
-        name: 'any_name',
-        email: 'any_email',
-        password: 'any_password'
-      }
+      const fakeAccount = makeFakeAccountReturnedByLoadAccountByEmailRepositoryStub()
 
       return await new Promise((resolve) => resolve(fakeAccount))
     }
