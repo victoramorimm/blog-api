@@ -35,7 +35,7 @@ const makeHasherStub = (): Hasher => {
 const makeFakeAccountReturnedByLoadAccountByEmailRepositoryStub = (): AccountReturnedByDbModel => ({
   id: 'any_id',
   name: 'any_name',
-  email: 'any_email',
+  email: 'any_email@mail.com',
   password: 'any_password'
 })
 
@@ -50,9 +50,7 @@ const makeLoadAccountByEmailRepositoryStub = (): LoadAccountByEmailRepository =>
   class LoadAccountByEmailRepositoryStub
     implements LoadAccountByEmailRepositoryStub {
     async loadByEmail(value: string): Promise<AccountReturnedByDbModel> {
-      const fakeAccount = makeFakeAccountReturnedByLoadAccountByEmailRepositoryStub()
-
-      return await new Promise((resolve) => resolve(fakeAccount))
+      return await new Promise((resolve) => resolve(null))
     }
   }
 
@@ -184,12 +182,13 @@ describe('DbAddAccount Usecase', () => {
     expect(loadAccountByEmailSpy).toHaveBeenCalledWith('any_email@mail.com')
   })
 
-  test('Should return null if LoadAccountByEmailRepository returns null', async () => {
+  test('Should return null if LoadAccountByEmailRepository returns an account', async () => {
     const { sut, loadAccountByEmailRepositoryStub } = makeSut()
 
+    const fakeAccount = makeFakeAccountReturnedByLoadAccountByEmailRepositoryStub()
     jest
       .spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail')
-      .mockReturnValue(new Promise((resolve) => resolve(null)))
+      .mockReturnValue(new Promise((resolve) => resolve(fakeAccount)))
 
     const fakeAccountData = makeFakeAddAccountData()
 
@@ -256,5 +255,20 @@ describe('DbAddAccount Usecase', () => {
     const promise = sut.add(fakeAccountData)
 
     await expect(promise).rejects.toThrow()
+  })
+
+  test('Should return an account on success', async () => {
+    const { sut } = makeSut()
+
+    const fakeAccountData = makeFakeAddAccountData()
+
+    const account = await sut.add(fakeAccountData)
+
+    expect(account).toEqual({
+      id: 'any_id',
+      name: 'any_name',
+      email: 'any_email',
+      password: 'any_password'
+    })
   })
 })
