@@ -243,4 +243,18 @@ describe('DbAddAccount Usecase', () => {
 
     expect(account).toBeNull()
   })
+
+  test('Should throw if AddAccountRepository throws', async () => {
+    const { sut, addAccountRepositoryStub } = makeSut()
+
+    jest.spyOn(addAccountRepositoryStub, 'add').mockImplementationOnce(() => {
+      throw new Error()
+    })
+
+    const fakeAccountData = makeFakeAddAccountData()
+
+    const promise = sut.add(fakeAccountData)
+
+    await expect(promise).rejects.toThrow()
+  })
 })
