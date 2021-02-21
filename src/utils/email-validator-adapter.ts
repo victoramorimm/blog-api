@@ -3,8 +3,8 @@ import validator from 'validator'
 
 export class EmailValidatorAdapter implements EmailValidator {
   validate(email: string): boolean {
-    validator.isEmail(email)
+    const isEmailValid = validator.isEmail(email)
 
-    return null
+    return isEmailValid
   }
 }
