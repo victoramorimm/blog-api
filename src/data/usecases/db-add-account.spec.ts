@@ -190,6 +190,7 @@ describe('DbAddAccount Usecase', () => {
     const { sut, loadAccountByEmailRepositoryStub } = makeSut()
 
     const fakeAccount = makeFakeAccountReturnedByLoadAccountByEmailRepositoryStub()
+
     jest
       .spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail')
       .mockReturnValue(new Promise((resolve) => resolve(fakeAccount)))
