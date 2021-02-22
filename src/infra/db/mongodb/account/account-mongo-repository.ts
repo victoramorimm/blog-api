@@ -1,8 +1,13 @@
 import { AccountReturnedByDbModel } from '../../../../data/models/account-returned-by-db-model'
-import { LoadAccountByEmailRepository } from '../../../../data/usecases/db-add-account-protocols'
+import { AddAccountModel } from '../../../../data/models/add-account-model'
+import {
+  AddAccountRepository,
+  LoadAccountByEmailRepository
+} from '../../../../data/usecases/db-add-account-protocols'
 import { MongoHelper } from '../helpers/mongo-helper'
 
-export class AccountMongoRepository implements LoadAccountByEmailRepository {
+export class AccountMongoRepository
+  implements LoadAccountByEmailRepository, AddAccountRepository {
   async loadByEmail(email: string): Promise<AccountReturnedByDbModel> {
     const accountCollection = await MongoHelper.getCollection('accounts')
 
@@ -13,5 +18,15 @@ export class AccountMongoRepository implements LoadAccountByEmailRepository {
     }
 
     return null
+  }
+
+  async add(accountData: AddAccountModel): Promise<AccountReturnedByDbModel> {
+    const accountCollection = await MongoHelper.getCollection('accounts')
+
+    const result = await accountCollection.insertOne(accountData)
+
+    const account = result.ops[0]
+
+    return MongoHelper.makeAdapterForDefaultIdReturnedByDb(account)
   }
 }
