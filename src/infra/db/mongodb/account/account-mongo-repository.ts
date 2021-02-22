@@ -8,6 +8,10 @@ export class AccountMongoRepository implements LoadAccountByEmailRepository {
 
     const account = await accountCollection.findOne({ email })
 
-    return MongoHelper.makeAdapterForDefaultIdReturnedByDb(account)
+    if (account) {
+      return MongoHelper.makeAdapterForDefaultIdReturnedByDb(account)
+    }
+
+    return null
   }
 }
