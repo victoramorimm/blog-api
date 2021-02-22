@@ -2,6 +2,16 @@ import { Collection } from 'mongodb'
 import { MongoHelper } from '../helpers/mongo-helper'
 import { AccountMongoRepository } from './account-mongo-repository'
 
+let accountCollection: Collection
+
+const insertAccountOnMemoryDb = async (): Promise<any> => {
+  await accountCollection.insertOne({
+    name: 'any_name',
+    email: 'any_email@mail.com',
+    password: 'hashed_password'
+  })
+}
+
 describe('Account Mongo Repository', () => {
   beforeAll(async () => {
     await MongoHelper.connect(process.env.MONGO_URL)
@@ -10,8 +20,6 @@ describe('Account Mongo Repository', () => {
   afterAll(async () => {
     await MongoHelper.disconnect()
   })
-
-  let accountCollection: Collection
 
   beforeEach(async () => {
     accountCollection = await MongoHelper.getCollection('accounts')
@@ -22,11 +30,7 @@ describe('Account Mongo Repository', () => {
   test('Should return an account on loadByEmail success', async () => {
     const sut = new AccountMongoRepository()
 
-    await accountCollection.insertOne({
-      name: 'any_name',
-      email: 'any_email@mail.com',
-      password: 'hashed_password'
-    })
+    await insertAccountOnMemoryDb()
 
     const account = await sut.loadByEmail('any_email@mail.com')
 
