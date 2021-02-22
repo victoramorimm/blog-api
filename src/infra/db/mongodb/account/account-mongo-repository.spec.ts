@@ -1,6 +1,13 @@
 import { Collection } from 'mongodb'
+import { AddAccountModel } from '../../../../data/models/add-account-model'
 import { MongoHelper } from '../helpers/mongo-helper'
 import { AccountMongoRepository } from './account-mongo-repository'
+
+const makeFakeAccountData = (): AddAccountModel => ({
+  name: 'any_name',
+  email: 'any_email@mail.com',
+  password: 'hashed_password'
+})
 
 let accountCollection: Collection
 
@@ -55,11 +62,9 @@ describe('Account Mongo Repository', () => {
     test('Should return an account on add success', async () => {
       const sut = new AccountMongoRepository()
 
-      const account = await sut.add({
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        password: 'hashed_password'
-      })
+      const fakeAccountData = makeFakeAccountData()
+
+      const account = await sut.add(fakeAccountData)
 
       expect(account).toBeTruthy()
       expect(account.id).toBeTruthy()
