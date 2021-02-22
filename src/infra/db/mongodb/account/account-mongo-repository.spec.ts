@@ -27,25 +27,45 @@ describe('Account Mongo Repository', () => {
     await accountCollection.deleteMany({})
   })
 
-  test('Should return an account on loadByEmail success', async () => {
-    const sut = new AccountMongoRepository()
+  describe('loadByEmail()', () => {
+    test('Should return an account on loadByEmail success', async () => {
+      const sut = new AccountMongoRepository()
 
-    await insertAccountOnMemoryDb()
+      await insertAccountOnMemoryDb()
 
-    const account = await sut.loadByEmail('any_email@mail.com')
+      const account = await sut.loadByEmail('any_email@mail.com')
 
-    expect(account).toBeTruthy()
-    expect(account.id).toBeTruthy()
-    expect(account.name).toBe('any_name')
-    expect(account.email).toBe('any_email@mail.com')
-    expect(account.password).toBe('hashed_password')
+      expect(account).toBeTruthy()
+      expect(account.id).toBeTruthy()
+      expect(account.name).toBe('any_name')
+      expect(account.email).toBe('any_email@mail.com')
+      expect(account.password).toBe('hashed_password')
+    })
+
+    test('Should return null if loadByEmail fails', async () => {
+      const sut = new AccountMongoRepository()
+
+      const account = await sut.loadByEmail('any_email@mail.com')
+
+      expect(account).toBeNull()
+    })
   })
 
-  test('Should return null if loadByEmail fails', async () => {
-    const sut = new AccountMongoRepository()
+  describe('add()', () => {
+    test('Should return an account on add success', async () => {
+      const sut = new AccountMongoRepository()
 
-    const account = await sut.loadByEmail('any_email@mail.com')
+      const account = await sut.add({
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        password: 'hashed_password'
+      })
 
-    expect(account).toBeNull()
+      expect(account).toBeTruthy()
+      expect(account.id).toBeTruthy()
+      expect(account.name).toBe('any_name')
+      expect(account.email).toBe('any_email@mail.com')
+      expect(account.password).toBe('hashed_password')
+    })
   })
 })
