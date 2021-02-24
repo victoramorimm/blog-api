@@ -7,7 +7,7 @@ import {
   LoadAccountByEmailRepository,
   AddAccountRepository
 } from './db-add-account-protocols'
-// To do: Mover a interface EmailValidator para alguma outra camada.
+
 import { EmailValidator } from '../../presentation/protocols/email-validator'
 
 export const makeFakeAddAccountData = (): AddAccountModel => ({
