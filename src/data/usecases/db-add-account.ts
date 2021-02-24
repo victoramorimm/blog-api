@@ -25,12 +25,12 @@ export class DbAddAccount implements AddAccount {
       return null
     }
 
-    await this.hasher.hash(password)
+    const hashedPassword = await this.hasher.hash(password)
 
     const account = await this.addAccountRepository.add({
       name,
       email,
-      password
+      password: hashedPassword
     })
 
     return account

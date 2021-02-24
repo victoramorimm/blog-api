@@ -17,7 +17,7 @@ export const makeFakeAddAccountData = (): AddAccountModel => ({
 const makeHasherStub = (): Hasher => {
   class HasherStub implements Hasher {
     async hash(value: string): Promise<string> {
-      return 'hashed_value'
+      return 'hashed_password'
     }
   }
 
@@ -28,14 +28,14 @@ const makeFakeAccountReturnedByLoadAccountByEmailRepositoryStub = (): AccountRet
   id: 'any_id',
   name: 'any_name',
   email: 'any_email@mail.com',
-  password: 'any_password'
+  password: 'hashed_password'
 })
 
 const makeFakeAccountReturnedByAddAccountRepositoryStub = (): AccountReturnedByDbModel => ({
   id: 'any_id',
   name: 'any_name',
   email: 'any_email',
-  password: 'any_password'
+  password: 'hashed_password'
 })
 
 const makeLoadAccountByEmailRepositoryStub = (): LoadAccountByEmailRepository => {
@@ -175,7 +175,7 @@ describe('DbAddAccount Usecase', () => {
     expect(loadAccountByEmailSpy).toHaveBeenCalledWith({
       name: 'any_name',
       email: 'any_email@mail.com',
-      password: 'any_password'
+      password: 'hashed_password'
     })
   })
 
@@ -204,7 +204,7 @@ describe('DbAddAccount Usecase', () => {
       id: 'any_id',
       name: 'any_name',
       email: 'any_email',
-      password: 'any_password'
+      password: 'hashed_password'
     })
   })
 })
