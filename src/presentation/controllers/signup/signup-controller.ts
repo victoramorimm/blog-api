@@ -4,8 +4,13 @@ import {
   HttpResponse,
   Controller
 } from './signup-protocols'
-import { InvalidParamError, MissingParamError, ServerError } from '../../errors'
-import { badRequest, ok, serverError } from '../../helpers/http'
+import {
+  EmailAlreadyInUseError,
+  InvalidParamError,
+  MissingParamError,
+  ServerError
+} from '../../errors'
+import { badRequest, forbidden, ok, serverError } from '../../helpers/http'
 import { EmailValidator } from '../../protocols'
 
 export class SignUpController implements Controller {
@@ -46,6 +51,10 @@ export class SignUpController implements Controller {
         email,
         password
       })
+
+      if (!account) {
+        return forbidden(new EmailAlreadyInUseError())
+      }
 
       return ok(account)
     } catch (error) {
