@@ -179,20 +179,6 @@ describe('DbAddAccount Usecase', () => {
     })
   })
 
-  test('Should return null if AddAccountRepository returns null', async () => {
-    const { sut, addAccountRepositoryStub } = makeSut()
-
-    jest
-      .spyOn(addAccountRepositoryStub, 'add')
-      .mockReturnValue(new Promise((resolve) => resolve(null)))
-
-    const fakeAccountData = makeFakeAddAccountData()
-
-    const account = await sut.add(fakeAccountData)
-
-    expect(account).toBeNull()
-  })
-
   test('Should throw if AddAccountRepository throws', async () => {
     const { sut, addAccountRepositoryStub } = makeSut()
 

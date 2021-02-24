@@ -33,10 +33,6 @@ export class DbAddAccount implements AddAccount {
       password
     })
 
-    if (account) {
-      return account
-    }
-
-    return null
+    return account
   }
 }
