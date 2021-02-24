@@ -5,8 +5,13 @@ import {
   AddAccountModel,
   AccountReturnedByDbModel
 } from './signup-protocols'
-import { InvalidParamError, MissingParamError, ServerError } from '../../errors'
-import { badRequest, ok, serverError } from '../../helpers/http'
+import {
+  InvalidParamError,
+  MissingParamError,
+  ServerError,
+  EmailAlreadyInUseError
+} from '../../errors'
+import { badRequest, ok, serverError, forbidden } from '../../helpers/http'
 import { EmailValidator } from '../../protocols'
 
 export const makeFakeRequestWithoutName = (): HttpRequest => ({
@@ -201,6 +206,20 @@ describe('SignUp Controller', () => {
       email: 'any_email@mail.com',
       password: 'any_password'
     })
+  })
+
+  test('Should return 403 if AddAccount returns null', async () => {
+    const { sut, addAccountStub } = makeSut()
+
+    jest
+      .spyOn(addAccountStub, 'add')
+      .mockReturnValueOnce(new Promise((resolve) => resolve(null)))
+
+    const httpRequest = makeFakeValidRequest()
+
+    const httpResponse = await sut.handle(httpRequest)
+
+    expect(httpResponse).toEqual(forbidden(new EmailAlreadyInUseError()))
   })
 
   test('Should return 500 if AddAccount throws', async () => {
