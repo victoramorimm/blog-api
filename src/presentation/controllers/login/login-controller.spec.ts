@@ -22,9 +22,31 @@ export const makeFakeValidRequest = (): HttpRequest => ({
   }
 })
 
+type SutTypes = {
+  sut: LoginController
+  emailValidatorStub: EmailValidator
+}
+
+const makeSut = (): SutTypes => {
+  class EmailValidatorStub implements EmailValidator {
+    validate(email: string): boolean {
+      return true
+    }
+  }
+
+  const emailValidatorStub = new EmailValidatorStub()
+
+  const sut = new LoginController(emailValidatorStub)
+
+  return {
+    sut,
+    emailValidatorStub
+  }
+}
+
 describe('Login Controller', () => {
   test('Should return 400 if no email is provided', async () => {
-    const sut = new LoginController(null)
+    const { sut } = makeSut()
 
     const httpResponse = await sut.handle(makeFakeRequestWithoutEmail())
 
@@ -32,7 +54,7 @@ describe('Login Controller', () => {
   })
 
   test('Should return 400 if no password is provided', async () => {
-    const sut = new LoginController(null)
+    const { sut } = makeSut()
 
     const httpResponse = await sut.handle(makeFakeRequestWithoutPassword())
 
@@ -40,17 +62,9 @@ describe('Login Controller', () => {
   })
 
   test('Should call EmailValidator with correct email', async () => {
-    class EmailValidatorStub implements EmailValidator {
-      validate(email: string): boolean {
-        return true
-      }
-    }
-
-    const emailValidatorStub = new EmailValidatorStub()
+    const { sut, emailValidatorStub } = makeSut()
 
     const validateSpy = jest.spyOn(emailValidatorStub, 'validate')
-
-    const sut = new LoginController(emailValidatorStub)
 
     await sut.handle(makeFakeValidRequest())
 
