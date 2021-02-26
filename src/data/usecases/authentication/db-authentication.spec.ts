@@ -1,6 +1,9 @@
 import { Authentication } from '../../../domain/usecases/authentication'
 import { AccountReturnedByDbModel } from '../../models/account-returned-by-db-model'
-import { HashComparer } from '../../protocols/criptography/hash-comparer'
+import {
+  HashComparer,
+  HashComparerModel
+} from '../../protocols/criptography/hash-comparer'
 import { LoadAccountByEmailRepository } from '../add-account/db-add-account-protocols'
 import { DbAuthentication } from './db-authentication'
 
@@ -24,7 +27,7 @@ export const makeLoadAccountByEmailRepositoryStub = (): LoadAccountByEmailReposi
 
 export const makeHashComparerStub = (): HashComparer => {
   class HashComparerStub implements HashComparer {
-    async compare(value: string, valueToCompare: string): Promise<boolean> {
+    async compare(hashComparerData: HashComparerModel): Promise<boolean> {
       return await new Promise((resolve) => resolve(true))
     }
   }
@@ -112,6 +115,9 @@ describe('DbAuthentication Usecase', () => {
       password: 'any_password'
     })
 
-    expect(hashSpy).toHaveBeenCalledWith('any_password', 'hashed_password')
+    expect(hashSpy).toHaveBeenCalledWith({
+      value: 'any_password',
+      valueToCompare: 'hashed_password'
+    })
   })
 })

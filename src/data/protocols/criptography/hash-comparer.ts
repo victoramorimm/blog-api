@@ -1,3 +1,8 @@
+export interface HashComparerModel {
+  value: string
+  valueToCompare: string
+}
+
 export interface HashComparer {
-  compare: (value: string, valueToCompare: string) => Promise<boolean>
+  compare: (hashComparerData: HashComparerModel) => Promise<boolean>
 }
