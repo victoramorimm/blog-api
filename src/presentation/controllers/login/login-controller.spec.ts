@@ -47,6 +47,11 @@ export const makeAuthenticationStub = (): Authentication => {
   return new AuthenticationStub()
 }
 
+export const makeFakeAuthenticationData = (): AuthenticationModel => ({
+  email: 'any_email@mail.com',
+  password: 'any_password'
+})
+
 type SutTypes = {
   sut: LoginController
   emailValidatorStub: EmailValidator
@@ -97,7 +102,7 @@ describe('Login Controller', () => {
   test('Should return 400 if EmailValidator returns false', async () => {
     const { sut, emailValidatorStub } = makeSut()
 
-    jest.spyOn(emailValidatorStub, 'validate').mockReturnValue(false)
+    jest.spyOn(emailValidatorStub, 'validate').mockReturnValueOnce(false)
 
     const httpResponse = await sut.handle(makeFakeValidRequest())
 
@@ -123,10 +128,7 @@ describe('Login Controller', () => {
 
     await sut.handle(makeFakeValidRequest())
 
-    expect(authenticate).toHaveBeenCalledWith({
-      email: 'any_email@mail.com',
-      password: 'any_password'
-    })
+    expect(authenticate).toHaveBeenCalledWith(makeFakeAuthenticationData())
   })
 
   test('Should return 401 if Authentication returns null', async () => {
