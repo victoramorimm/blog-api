@@ -5,8 +5,18 @@ import {
   HttpResponse,
   Authentication
 } from './login-controller-protocols'
-import { InvalidParamError, MissingParamError, ServerError } from '../../errors'
-import { badRequest, noContent, serverError } from '../../helpers/http'
+import {
+  AuthenticationError,
+  InvalidParamError,
+  MissingParamError,
+  ServerError
+} from '../../errors'
+import {
+  badRequest,
+  noContent,
+  serverError,
+  unauthorized
+} from '../../helpers/http'
 
 export class LoginController implements Controller {
   constructor(
@@ -38,7 +48,7 @@ export class LoginController implements Controller {
       })
 
       if (isAuthenticationValid === null) {
-        return badRequest(new InvalidParamError('password'))
+        return unauthorized(new AuthenticationError())
       }
 
       return noContent()
