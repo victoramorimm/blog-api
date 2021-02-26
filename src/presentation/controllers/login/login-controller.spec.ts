@@ -26,6 +26,26 @@ export const makeFakeValidRequest = (): HttpRequest => ({
   }
 })
 
+export const makeEmailValidatorStub = (): EmailValidator => {
+  class EmailValidatorStub implements EmailValidator {
+    validate(email: string): boolean {
+      return true
+    }
+  }
+
+  return new EmailValidatorStub()
+}
+
+export const makeAuthenticationStub = (): Authentication => {
+  class AuthenticationStub implements Authentication {
+    async authenticate(
+      authenticationData: AuthenticationModel
+    ): Promise<void> {}
+  }
+
+  return new AuthenticationStub()
+}
+
 type SutTypes = {
   sut: LoginController
   emailValidatorStub: EmailValidator
@@ -33,21 +53,9 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  class EmailValidatorStub implements EmailValidator {
-    validate(email: string): boolean {
-      return true
-    }
-  }
+  const emailValidatorStub = makeEmailValidatorStub()
 
-  const emailValidatorStub = new EmailValidatorStub()
-
-  class AuthenticationStub implements Authentication {
-    async authenticate(
-      authenticationData: AuthenticationModel
-    ): Promise<void> {}
-  }
-
-  const authenticationStub = new AuthenticationStub()
+  const authenticationStub = makeAuthenticationStub()
 
   const sut = new LoginController(emailValidatorStub, authenticationStub)
 
