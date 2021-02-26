@@ -31,9 +31,13 @@ export class LoginController implements Controller {
       return badRequest(new InvalidParamError('email'))
     }
 
-    await this.authentication.authenticate({
+    const isAuthenticationValid = await this.authentication.authenticate({
       email,
       password
     })
+
+    if (isAuthenticationValid === null) {
+      return badRequest(new InvalidParamError('password'))
+    }
   }
 }
