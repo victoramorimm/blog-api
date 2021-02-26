@@ -9,6 +9,7 @@
 5. 🕙 Valida que a senha provida é a mesma que a da conta encontrada pelo e-mail.
 6. 🕙 Gera um token de acesso para o usuário.
 7. 🕙 Atualiza o token salvo no banco de dados pelo novo.
+8. 🕙 Retorna **204** caso tudo funcione como o esperado.
 
 > ## Exceções
 
