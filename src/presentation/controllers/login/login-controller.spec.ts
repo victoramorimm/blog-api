@@ -5,8 +5,18 @@ import {
   EmailValidator,
   HttpRequest
 } from './login-controller-protocols'
-import { InvalidParamError, MissingParamError, ServerError } from '../../errors'
-import { badRequest, noContent, serverError } from '../../helpers/http'
+import {
+  InvalidParamError,
+  MissingParamError,
+  ServerError,
+  AuthenticationError
+} from '../../errors'
+import {
+  badRequest,
+  noContent,
+  serverError,
+  unauthorized
+} from '../../helpers/http'
 
 export const makeFakeRequestWithoutEmail = (): HttpRequest => ({
   body: {
@@ -140,7 +150,7 @@ describe('Login Controller', () => {
 
     const httpResponse = await sut.handle(makeFakeValidRequest())
 
-    expect(httpResponse).toEqual(badRequest(new InvalidParamError('password')))
+    expect(httpResponse).toEqual(unauthorized(new AuthenticationError()))
   })
 
   test('Should return 500 if Authentication throws', async () => {
