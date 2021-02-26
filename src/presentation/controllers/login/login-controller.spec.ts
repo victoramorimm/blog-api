@@ -139,4 +139,18 @@ describe('Login Controller', () => {
 
     expect(httpResponse).toEqual(badRequest(new InvalidParamError('password')))
   })
+
+  test('Should return 500 if Authentication throws', async () => {
+    const { sut, authenticationStub } = makeSut()
+
+    jest
+      .spyOn(authenticationStub, 'authenticate')
+      .mockImplementationOnce(() => {
+        throw new Error()
+      })
+
+    const httpResponse = await sut.handle(makeFakeValidRequest())
+
+    expect(httpResponse).toEqual(serverError(new ServerError()))
+  })
 })
