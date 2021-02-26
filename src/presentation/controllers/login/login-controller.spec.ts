@@ -3,7 +3,7 @@ import {
   AuthenticationModel
 } from '../../../domain/usecases/authentication'
 import { InvalidParamError, MissingParamError, ServerError } from '../../errors'
-import { badRequest, serverError } from '../../helpers/http'
+import { badRequest, noContent, serverError } from '../../helpers/http'
 import { EmailValidator, HttpRequest } from '../../protocols'
 import { LoginController } from './login-controller'
 
@@ -152,5 +152,13 @@ describe('Login Controller', () => {
     const httpResponse = await sut.handle(makeFakeValidRequest())
 
     expect(httpResponse).toEqual(serverError(new ServerError()))
+  })
+
+  test('Should return 204 on success', async () => {
+    const { sut } = makeSut()
+
+    const httpResponse = await sut.handle(makeFakeValidRequest())
+
+    expect(httpResponse).toEqual(noContent())
   })
 })
