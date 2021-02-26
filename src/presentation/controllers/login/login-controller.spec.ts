@@ -107,4 +107,16 @@ describe('Login Controller', () => {
       password: 'any_password'
     })
   })
+
+  test('Should return 401 if Authentication returns null', async () => {
+    const { sut, authenticationStub } = makeSut()
+
+    jest
+      .spyOn(authenticationStub, 'authenticate')
+      .mockReturnValueOnce(new Promise((resolve) => resolve(null)))
+
+    const httpResponse = await sut.handle(makeFakeValidRequest())
+
+    expect(httpResponse).toEqual(badRequest(new InvalidParamError('password')))
+  })
 })
