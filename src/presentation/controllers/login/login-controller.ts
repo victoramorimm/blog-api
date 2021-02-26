@@ -1,6 +1,6 @@
 import { Authentication } from '../../../domain/usecases/authentication'
 import { InvalidParamError, MissingParamError, ServerError } from '../../errors'
-import { badRequest, serverError } from '../../helpers/http'
+import { badRequest, noContent, serverError } from '../../helpers/http'
 import {
   Controller,
   EmailValidator,
@@ -40,6 +40,8 @@ export class LoginController implements Controller {
       if (isAuthenticationValid === null) {
         return badRequest(new InvalidParamError('password'))
       }
+
+      return noContent()
     } catch (error) {
       return serverError(new ServerError())
     }
