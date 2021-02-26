@@ -19,9 +19,7 @@ export class LoginController implements Controller {
 
     for (const field of requiredFields) {
       if (!httpRequest.body[field]) {
-        return await new Promise((resolve) =>
-          resolve(badRequest(new MissingParamError(field)))
-        )
+        return badRequest(new MissingParamError(field))
       }
     }
 
