@@ -51,7 +51,9 @@ export const makeAuthenticationStub = (): Authentication => {
   class AuthenticationStub implements Authentication {
     async authenticate(
       authenticationData: AuthenticationModel
-    ): Promise<void> {}
+    ): Promise<string> {
+      return await new Promise((resolve) => resolve('any_token'))
+    }
   }
 
   return new AuthenticationStub()
