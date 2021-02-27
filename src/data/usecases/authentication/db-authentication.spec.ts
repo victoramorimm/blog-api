@@ -9,18 +9,20 @@ import { UpdateAccessTokenRepository } from '../../protocols/db/account/update-a
 import { LoadAccountByEmailRepository } from '../add-account/db-add-account-protocols'
 import { DbAuthentication } from './db-authentication'
 
+const makeFakeAccount = (): AccountReturnedByDbModel => ({
+  id: 'any_id',
+  name: 'any_name',
+  email: 'any_email@mail.com',
+  password: 'hashed_password'
+})
+
 export const makeLoadAccountByEmailRepositoryStub = (): LoadAccountByEmailRepository => {
   class LoadAccountByEmailRepositoryStub
     implements LoadAccountByEmailRepository {
     async loadByEmail(email: string): Promise<AccountReturnedByDbModel> {
-      const fakeAccount = {
-        id: 'any_id',
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        password: 'hashed_password'
-      }
+      const account = makeFakeAccount()
 
-      return await new Promise((resolve) => resolve(fakeAccount))
+      return await new Promise((resolve) => resolve(account))
     }
   }
 
@@ -50,14 +52,9 @@ export const makeEncrypterStub = (): Encrypter => {
 export const makeUpdateAccessTokenRepositoryStub = (): UpdateAccessTokenRepository => {
   class UpdateAccessTokenRepositoryStub implements UpdateAccessTokenRepository {
     async updateToken(token: string): Promise<AccountReturnedByDbModel> {
-      const fakeAccount = {
-        id: 'any_id',
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        password: 'hashed_password'
-      }
+      const account = makeFakeAccount()
 
-      return await new Promise((resolve) => resolve(fakeAccount))
+      return await new Promise((resolve) => resolve(account))
     }
   }
 
@@ -77,18 +74,18 @@ const makeSut = (): SutTypes => {
 
   const encrypterStub = makeEncrypterStub()
 
-  const secret = 'any_secret'
-
   const hashComparerStub = makeHashComparerStub()
 
   const loadAccountByEmailRepositoryStub = makeLoadAccountByEmailRepositoryStub()
+
+  const secret = 'any_secret'
 
   const sut = new DbAuthentication(
     loadAccountByEmailRepositoryStub,
     hashComparerStub,
     encrypterStub,
-    secret,
-    updateAccessTokenRepositoryStub
+    updateAccessTokenRepositoryStub,
+    secret
   )
 
   return {
