@@ -3,7 +3,7 @@ import { AddAccountModel } from '../../../../data/models/add-account-model'
 import {
   AddAccountRepository,
   LoadAccountByEmailRepository
-} from '../../../../data/usecases/db-add-account-protocols'
+} from '../../../../data/usecases/add-account/db-add-account-protocols'
 import { MongoHelper } from '../helpers/mongo-helper'
 
 export class AccountMongoRepository
@@ -25,8 +25,8 @@ export class AccountMongoRepository
 
     const result = await accountCollection.insertOne(accountData)
 
-    const account = result.ops[0]
+    const accountReturnedByDb = result.ops[0]
 
-    return MongoHelper.makeAdapterForDefaultIdReturnedByDb(account)
+    return MongoHelper.makeAdapterForDefaultIdReturnedByDb(accountReturnedByDb)
   }
 }

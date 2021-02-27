@@ -36,9 +36,9 @@ describe('Account Mongo Repository', () => {
 
   describe('loadByEmail()', () => {
     test('Should return an account on loadByEmail success', async () => {
-      const sut = new AccountMongoRepository()
-
       await insertAccountOnMemoryDb()
+
+      const sut = new AccountMongoRepository()
 
       const account = await sut.loadByEmail('any_email@mail.com')
 
@@ -62,9 +62,7 @@ describe('Account Mongo Repository', () => {
     test('Should return an account on add success', async () => {
       const sut = new AccountMongoRepository()
 
-      const fakeAccountData = makeFakeAccountData()
-
-      const account = await sut.add(fakeAccountData)
+      const account = await sut.add(makeFakeAccountData())
 
       expect(account).toBeTruthy()
       expect(account.id).toBeTruthy()

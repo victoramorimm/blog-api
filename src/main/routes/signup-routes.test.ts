@@ -1,6 +1,14 @@
 import request from 'supertest'
+import { AddAccountModel } from '../../data/models/add-account-model'
 import { MongoHelper } from '../../infra/db/mongodb/helpers/mongo-helper'
 import app from '../config/app'
+
+export const makeFakeAccountData = (): AddAccountModel => ({
+  name: 'Victor Amorim',
+  email: 'victorvmrgamer@gmail.com',
+  password: '123456',
+  passwordConfirmation: '123456'
+})
 
 describe('SignUp Routes', () => {
   beforeAll(async () => {
@@ -20,12 +28,7 @@ describe('SignUp Routes', () => {
   test('Should return an account on success', async () => {
     await request(app)
       .post('/api/signup')
-      .send({
-        name: 'Victor Amorim',
-        email: 'victorvmrgamer@gmail.com',
-        password: '123456',
-        passwordConfirmation: '123456'
-      })
+      .send(makeFakeAccountData())
       .expect(200)
   })
 })
