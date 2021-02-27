@@ -1,3 +1,8 @@
+export interface EncrypterModel {
+  value: string
+  secret: string
+}
+
 export interface Encrypter {
-  encrypt: (value: string, secret: string) => Promise<string>
+  encrypt: (encrypterData: EncrypterModel) => Promise<string>
 }

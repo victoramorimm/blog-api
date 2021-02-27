@@ -28,7 +28,10 @@ export class DbAuthentication implements Authentication {
       valueToCompare: account.password
     })
 
-    await this.encrypter.encrypt(account.id, this.secret)
+    await this.encrypter.encrypt({
+      value: account.id,
+      secret: this.secret
+    })
 
     return null
   }

@@ -180,6 +180,9 @@ describe('DbAuthentication Usecase', () => {
       password: 'any_password'
     })
 
-    expect(encryptSpy).toHaveBeenCalledWith('any_id', 'any_secret')
+    expect(encryptSpy).toHaveBeenCalledWith({
+      value: 'any_id',
+      secret: 'any_secret'
+    })
   })
 })
