@@ -3,12 +3,12 @@ import {
   EmailValidator,
   HttpRequest,
   HttpResponse,
-  Authentication
+  Authentication,
+  makeRequiredFieldsValidationForLogin
 } from './login-controller-protocols'
 import {
   AuthenticationError,
   InvalidParamError,
-  MissingParamError,
   ServerError
 } from '../../errors'
 import {
@@ -26,32 +26,32 @@ export class LoginController implements Controller {
 
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const requiredFields = ['email', 'password']
+      const errorWithMissingFields = makeRequiredFieldsValidationForLogin(
+        httpRequest
+      )
 
-      for (const field of requiredFields) {
-        if (!httpRequest.body[field]) {
-          return badRequest(new MissingParamError(field))
+      if (!errorWithMissingFields) {
+        const { email, password } = httpRequest.body
+
+        const isEmailValid = this.emailValidator.validate(email)
+
+        if (!isEmailValid) {
+          return badRequest(new InvalidParamError('email'))
         }
+
+        const isAuthenticationValid = await this.authentication.authenticate({
+          email,
+          password
+        })
+
+        if (isAuthenticationValid === null) {
+          return unauthorized(new AuthenticationError())
+        }
+
+        return noContent()
       }
 
-      const { email, password } = httpRequest.body
-
-      const isEmailValid = this.emailValidator.validate(email)
-
-      if (!isEmailValid) {
-        return badRequest(new InvalidParamError('email'))
-      }
-
-      const isAuthenticationValid = await this.authentication.authenticate({
-        email,
-        password
-      })
-
-      if (isAuthenticationValid === null) {
-        return unauthorized(new AuthenticationError())
-      }
-
-      return noContent()
+      return errorWithMissingFields
     } catch (error) {
       return serverError(new ServerError())
     }
