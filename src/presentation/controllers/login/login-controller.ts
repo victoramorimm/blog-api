@@ -11,12 +11,7 @@ import {
   InvalidParamError,
   ServerError
 } from '../../errors'
-import {
-  badRequest,
-  noContent,
-  serverError,
-  unauthorized
-} from '../../helpers/http'
+import { badRequest, ok, serverError, unauthorized } from '../../helpers/http'
 
 export class LoginController implements Controller {
   constructor(
@@ -28,28 +23,28 @@ export class LoginController implements Controller {
     try {
       const missingFields = makeRequiredFieldsValidationForLogin(httpRequest)
 
-      if (!missingFields) {
-        const { email, password } = httpRequest.body
-
-        const isEmailValid = this.emailValidator.validate(email)
-
-        if (!isEmailValid) {
-          return badRequest(new InvalidParamError('email'))
-        }
-
-        const isAuthenticationValid = await this.authentication.authenticate({
-          email,
-          password
-        })
-
-        if (isAuthenticationValid === null) {
-          return unauthorized(new AuthenticationError())
-        }
-
-        return noContent()
+      if (missingFields) {
+        return missingFields
       }
 
-      return missingFields
+      const { email, password } = httpRequest.body
+
+      const isEmailValid = this.emailValidator.validate(email)
+
+      if (!isEmailValid) {
+        return badRequest(new InvalidParamError('email'))
+      }
+
+      const accessToken = await this.authentication.authenticate({
+        email,
+        password
+      })
+
+      if (accessToken === null) {
+        return unauthorized(new AuthenticationError())
+      }
+
+      return ok(accessToken)
     } catch (error) {
       return serverError(new ServerError())
     }

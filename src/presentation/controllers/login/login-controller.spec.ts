@@ -11,12 +11,7 @@ import {
   ServerError,
   AuthenticationError
 } from '../../errors'
-import {
-  badRequest,
-  noContent,
-  serverError,
-  unauthorized
-} from '../../helpers/http'
+import { badRequest, ok, serverError, unauthorized } from '../../helpers/http'
 
 export const makeFakeRequestWithoutEmail = (): HttpRequest => ({
   body: {
@@ -169,11 +164,11 @@ describe('Login Controller', () => {
     expect(httpResponse).toEqual(serverError(new ServerError()))
   })
 
-  test('Should return 204 on success', async () => {
+  test('Should return 200 on success', async () => {
     const { sut } = makeSut()
 
     const httpResponse = await sut.handle(makeFakeValidRequest())
 
-    expect(httpResponse).toEqual(noContent())
+    expect(httpResponse).toEqual(ok('any_token'))
   })
 })
