@@ -185,4 +185,19 @@ describe('DbAuthentication Usecase', () => {
       secret: 'any_secret'
     })
   })
+
+  test('Should throw if Encrypter throws', async () => {
+    const { sut, encrypterStub } = makeSut()
+
+    jest
+      .spyOn(encrypterStub, 'encrypt')
+      .mockReturnValue(new Promise((resolve, reject) => reject(new Error())))
+
+    const promise = sut.authenticate({
+      email: 'any_email@mail.com',
+      password: 'any_password'
+    })
+
+    await expect(promise).rejects.toThrow()
+  })
 })
