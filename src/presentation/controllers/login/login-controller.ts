@@ -26,11 +26,9 @@ export class LoginController implements Controller {
 
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const errorWithMissingFields = makeRequiredFieldsValidationForLogin(
-        httpRequest
-      )
+      const missingFields = makeRequiredFieldsValidationForLogin(httpRequest)
 
-      if (!errorWithMissingFields) {
+      if (!missingFields) {
         const { email, password } = httpRequest.body
 
         const isEmailValid = this.emailValidator.validate(email)
@@ -51,7 +49,7 @@ export class LoginController implements Controller {
         return noContent()
       }
 
-      return errorWithMissingFields
+      return missingFields
     } catch (error) {
       return serverError(new ServerError())
     }
