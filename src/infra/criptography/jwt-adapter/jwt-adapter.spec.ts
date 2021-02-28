@@ -24,6 +24,14 @@ describe('Jwt Adapter', () => {
     expect(signSpy).toHaveBeenCalledWith({ value: 'any_value' }, secret)
   })
 
+  test('Should return a token on sign success', async () => {
+    const sut = makeSut()
+
+    const accessToken = await sut.encrypt('any_value')
+
+    expect(accessToken).toEqual('any_token')
+  })
+
   test('Should throw if sign throws', async () => {
     const sut = makeSut()
 
@@ -34,13 +42,5 @@ describe('Jwt Adapter', () => {
     const accessToken = sut.encrypt('any_value')
 
     await expect(accessToken).rejects.toThrow()
-  })
-
-  test('Should return a token on sign success', async () => {
-    const sut = makeSut()
-
-    const accessToken = await sut.encrypt('any_value')
-
-    expect(accessToken).toEqual('any_token')
   })
 })

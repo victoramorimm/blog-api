@@ -12,7 +12,7 @@ import {
 import { LoadAccountByEmailRepository } from '../add-account/db-add-account-protocols'
 import { DbAuthentication } from './db-authentication'
 
-const makeFakeAccount = (): AccountReturnedByDbModel => ({
+const makeFakeAccountReturnedByDb = (): AccountReturnedByDbModel => ({
   id: 'any_id',
   name: 'any_name',
   email: 'any_email@mail.com',
@@ -23,7 +23,7 @@ export const makeLoadAccountByEmailRepositoryStub = (): LoadAccountByEmailReposi
   class LoadAccountByEmailRepositoryStub
     implements LoadAccountByEmailRepository {
     async loadByEmail(email: string): Promise<AccountReturnedByDbModel> {
-      const account = makeFakeAccount()
+      const account = makeFakeAccountReturnedByDb()
 
       return await new Promise((resolve) => resolve(account))
     }
@@ -34,7 +34,7 @@ export const makeLoadAccountByEmailRepositoryStub = (): LoadAccountByEmailReposi
 
 export const makeHashComparerStub = (): HashComparer => {
   class HashComparerStub implements HashComparer {
-    async compare(hashComparerData: HashComparerModel): Promise<boolean> {
+    async compare(hashCompareData: HashComparerModel): Promise<boolean> {
       return await new Promise((resolve) => resolve(true))
     }
   }
@@ -57,7 +57,7 @@ export const makeUpdateAccessTokenRepositoryStub = (): UpdateAccessTokenReposito
     async updateAccessToken(
       updateTokenData: UpdateAccessTokenModel
     ): Promise<AccountReturnedByDbModel> {
-      const account = makeFakeAccount()
+      const account = makeFakeAccountReturnedByDb()
 
       return await new Promise((resolve) => resolve(account))
     }
@@ -223,7 +223,7 @@ describe('DbAuthentication Usecase', () => {
   test('Should call UpdateAccessTokenRepository with correct values', async () => {
     const { sut, updateAccessTokenRepositoryStub } = makeSut()
 
-    const updateSpy = jest.spyOn(
+    const updateAccessTokenSpy = jest.spyOn(
       updateAccessTokenRepositoryStub,
       'updateAccessToken'
     )
@@ -233,7 +233,7 @@ describe('DbAuthentication Usecase', () => {
       password: 'any_password'
     })
 
-    expect(updateSpy).toHaveBeenCalledWith({
+    expect(updateAccessTokenSpy).toHaveBeenCalledWith({
       accessToken: 'any_token',
       id: 'any_id'
     })

@@ -77,7 +77,7 @@ describe('Account Mongo Repository', () => {
   })
 
   describe('updateToken()', () => {
-    test('Should update the account token on updateToken success', async () => {
+    test('Should update the account accessToken on updateToken success', async () => {
       const sut = makeSut()
 
       const result = await insertAccountOnMemoryDb()
