@@ -9,10 +9,7 @@ describe('Jwt Adapter', () => {
 
     const signSpy = jest.spyOn(jwt, 'sign')
 
-    await sut.encrypt({
-      value: 'any_value',
-      secret
-    })
+    await sut.encrypt('any_value')
 
     expect(signSpy).toHaveBeenCalledWith({ value: 'any_value' }, secret)
   })
