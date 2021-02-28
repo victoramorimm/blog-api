@@ -3,7 +3,8 @@ import {
   HttpRequest,
   AddAccount,
   AddAccountModel,
-  AccountReturnedByDbModel
+  AccountReturnedByDbModel,
+  EmailValidator
 } from './signup-protocols'
 import {
   InvalidParamError,
@@ -12,7 +13,6 @@ import {
   EmailAlreadyInUseError
 } from '../../errors'
 import { badRequest, ok, serverError, forbidden } from '../../helpers/http'
-import { EmailValidator } from '../../protocols'
 
 export const makeFakeRequestWithoutName = (): HttpRequest => ({
   body: {

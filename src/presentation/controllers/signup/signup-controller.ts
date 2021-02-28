@@ -21,35 +21,37 @@ export class SignUpController implements Controller {
 
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const missingFields = makeRequiredFieldsValidationForSignUp(httpRequest)
+      const missingFieldError = makeRequiredFieldsValidationForSignUp(
+        httpRequest
+      )
 
-      if (!missingFields) {
-        const { email, name, password, passwordConfirmation } = httpRequest.body
-
-        if (password !== passwordConfirmation) {
-          return badRequest(new InvalidParamError('passwordConfirmation'))
-        }
-
-        const isEmailValid = this.emailValidator.validate(email)
-
-        if (!isEmailValid) {
-          return badRequest(new InvalidParamError('email'))
-        }
-
-        const account = await this.addAccount.add({
-          name,
-          email,
-          password
-        })
-
-        if (!account) {
-          return forbidden(new EmailAlreadyInUseError())
-        }
-
-        return ok(account)
+      if (missingFieldError) {
+        return missingFieldError
       }
 
-      return missingFields
+      const { email, name, password, passwordConfirmation } = httpRequest.body
+
+      if (password !== passwordConfirmation) {
+        return badRequest(new InvalidParamError('passwordConfirmation'))
+      }
+
+      const isEmailValid = this.emailValidator.validate(email)
+
+      if (!isEmailValid) {
+        return badRequest(new InvalidParamError('email'))
+      }
+
+      const account = await this.addAccount.add({
+        name,
+        email,
+        password
+      })
+
+      if (!account) {
+        return forbidden(new EmailAlreadyInUseError())
+      }
+
+      return ok(account)
     } catch (error) {
       return serverError(new ServerError())
     }

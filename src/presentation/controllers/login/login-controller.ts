@@ -21,10 +21,12 @@ export class LoginController implements Controller {
 
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const missingFields = makeRequiredFieldsValidationForLogin(httpRequest)
+      const missingFieldError = makeRequiredFieldsValidationForLogin(
+        httpRequest
+      )
 
-      if (missingFields) {
-        return missingFields
+      if (missingFieldError) {
+        return missingFieldError
       }
 
       const { email, password } = httpRequest.body
