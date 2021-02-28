@@ -1,6 +1,6 @@
-import { MissingParamError } from '../errors'
-import { badRequest } from '../helpers/http'
-import { HttpRequest, HttpResponse } from '../protocols'
+import { MissingParamError } from '../../errors'
+import { badRequest } from '../../helpers/http'
+import { HttpRequest, HttpResponse } from '../../protocols'
 
 export const makeRequiredFieldsValidationForLogin = (
   httpRequest: HttpRequest
