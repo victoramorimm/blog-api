@@ -3,6 +3,10 @@ import { AddAccountModel } from '../../../../data/models/add-account-model'
 import { MongoHelper } from '../helpers/mongo-helper'
 import { AccountMongoRepository } from './account-mongo-repository'
 
+const makeSut = (): AccountMongoRepository => {
+  return new AccountMongoRepository()
+}
+
 const makeFakeAccountData = (): AddAccountModel => ({
   name: 'any_name',
   email: 'any_email@mail.com',
@@ -36,9 +40,9 @@ describe('Account Mongo Repository', () => {
 
   describe('loadByEmail()', () => {
     test('Should return an account on loadByEmail success', async () => {
-      await insertAccountOnMemoryDb()
+      const sut = makeSut()
 
-      const sut = new AccountMongoRepository()
+      await insertAccountOnMemoryDb()
 
       const account = await sut.loadByEmail('any_email@mail.com')
 
@@ -50,7 +54,7 @@ describe('Account Mongo Repository', () => {
     })
 
     test('Should return null if loadByEmail fails', async () => {
-      const sut = new AccountMongoRepository()
+      const sut = makeSut()
 
       const account = await sut.loadByEmail('any_email@mail.com')
 
