@@ -1,16 +1,14 @@
-import { Authentication } from '../../../domain/usecases/authentication'
-import { AccountReturnedByDbModel } from '../../models/account-returned-by-db-model'
-import { Encrypter } from '../../protocols/criptography/encrypter'
+import { DbAuthentication } from './db-authentication'
 import {
+  Authentication,
+  AccountReturnedByDbModel,
+  Encrypter,
   HashComparer,
-  HashComparerModel
-} from '../../protocols/criptography/hash-comparer'
-import {
+  HashComparerModel,
   UpdateAccessTokenRepository,
   UpdateAccessTokenModel
-} from '../../protocols/db/account/update-access-token-repository'
+} from './db-authentication-protocols'
 import { LoadAccountByEmailRepository } from '../add-account/db-add-account-protocols'
-import { DbAuthentication } from './db-authentication'
 
 const makeFakeAccountReturnedByDb = (): AccountReturnedByDbModel => ({
   id: 'any_id',
