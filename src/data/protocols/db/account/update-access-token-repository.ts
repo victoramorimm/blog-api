@@ -1,5 +1,12 @@
 import { AccountReturnedByDbModel } from '../../../models/account-returned-by-db-model'
 
+export interface UpdateTokenModel {
+  token: string
+  id: string
+}
+
 export interface UpdateAccessTokenRepository {
-  updateToken: (token: string) => Promise<AccountReturnedByDbModel>
+  updateToken: (
+    updateTokenData: UpdateTokenModel
+  ) => Promise<AccountReturnedByDbModel>
 }
