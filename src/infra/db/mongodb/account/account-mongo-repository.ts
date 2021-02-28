@@ -2,7 +2,7 @@ import { AccountReturnedByDbModel } from '../../../../data/models/account-return
 import { AddAccountModel } from '../../../../data/models/add-account-model'
 import {
   UpdateAccessTokenRepository,
-  UpdateTokenModel
+  UpdateAccessTokenModel
 } from '../../../../data/protocols/db/account/update-access-token-repository'
 import {
   AddAccountRepository,
@@ -37,8 +37,8 @@ export class AccountMongoRepository
     return MongoHelper.makeAdapterForDefaultIdReturnedByDb(accountReturnedByDb)
   }
 
-  async updateToken(
-    updateTokenData: UpdateTokenModel
+  async updateAccessToken(
+    updateTokenData: UpdateAccessTokenModel
   ): Promise<AccountReturnedByDbModel> {
     const { id, token } = updateTokenData
 

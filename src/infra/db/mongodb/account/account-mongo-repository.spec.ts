@@ -88,7 +88,7 @@ describe('Account Mongo Repository', () => {
 
       const { _id } = accountReturnedByMemoryOnDb
 
-      await sut.updateToken({
+      await sut.updateAccessToken({
         id: _id,
         token: 'any_token'
       })
