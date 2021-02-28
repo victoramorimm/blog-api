@@ -1,7 +1,7 @@
 import { AccountReturnedByDbModel } from '../../../models/account-returned-by-db-model'
 
 export interface UpdateAccessTokenModel {
-  token: string
+  accessToken: string
   id: string
 }
 

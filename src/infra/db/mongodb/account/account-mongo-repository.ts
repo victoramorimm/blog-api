@@ -38,9 +38,9 @@ export class AccountMongoRepository
   }
 
   async updateAccessToken(
-    updateTokenData: UpdateAccessTokenModel
+    updateAccessTokenData: UpdateAccessTokenModel
   ): Promise<AccountReturnedByDbModel> {
-    const { id, token } = updateTokenData
+    const { id, accessToken } = updateAccessTokenData
 
     const accountCollection = await MongoHelper.getCollection('accounts')
 
@@ -50,7 +50,7 @@ export class AccountMongoRepository
       },
       {
         $set: {
-          token: token
+          accessToken
         }
       }
     )

@@ -83,14 +83,11 @@ const makeSut = (): SutTypes => {
 
   const loadAccountByEmailRepositoryStub = makeLoadAccountByEmailRepositoryStub()
 
-  const secret = 'any_secret'
-
   const sut = new DbAuthentication(
     loadAccountByEmailRepositoryStub,
     hashComparerStub,
     encrypterStub,
-    updateAccessTokenRepositoryStub,
-    secret
+    updateAccessTokenRepositoryStub
   )
 
   return {
@@ -237,7 +234,7 @@ describe('DbAuthentication Usecase', () => {
     })
 
     expect(updateSpy).toHaveBeenCalledWith({
-      token: 'any_token',
+      accessToken: 'any_token',
       id: 'any_id'
     })
   })

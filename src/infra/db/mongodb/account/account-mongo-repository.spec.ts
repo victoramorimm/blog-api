@@ -82,21 +82,19 @@ describe('Account Mongo Repository', () => {
 
       const result = await insertAccountOnMemoryDb()
 
-      console.log(result)
-
       const accountReturnedByMemoryOnDb = result.ops[0]
 
       const { _id } = accountReturnedByMemoryOnDb
 
       await sut.updateAccessToken({
         id: _id,
-        token: 'any_token'
+        accessToken: 'any_token'
       })
 
       const account = await accountCollection.findOne({ _id })
 
       expect(account).toBeTruthy()
-      expect(account.token).toBe('any_token')
+      expect(account.accessToken).toBe('any_token')
     })
   })
 })
