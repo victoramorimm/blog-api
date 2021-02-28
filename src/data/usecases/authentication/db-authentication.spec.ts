@@ -5,7 +5,10 @@ import {
   HashComparer,
   HashComparerModel
 } from '../../protocols/criptography/hash-comparer'
-import { UpdateAccessTokenRepository } from '../../protocols/db/account/update-access-token-repository'
+import {
+  UpdateAccessTokenRepository,
+  UpdateTokenModel
+} from '../../protocols/db/account/update-access-token-repository'
 import { LoadAccountByEmailRepository } from '../add-account/db-add-account-protocols'
 import { DbAuthentication } from './db-authentication'
 
@@ -51,7 +54,9 @@ export const makeEncrypterStub = (): Encrypter => {
 
 export const makeUpdateAccessTokenRepositoryStub = (): UpdateAccessTokenRepository => {
   class UpdateAccessTokenRepositoryStub implements UpdateAccessTokenRepository {
-    async updateToken(token: string): Promise<AccountReturnedByDbModel> {
+    async updateToken(
+      updateTokenData: UpdateTokenModel
+    ): Promise<AccountReturnedByDbModel> {
       const account = makeFakeAccount()
 
       return await new Promise((resolve) => resolve(account))
@@ -218,7 +223,7 @@ describe('DbAuthentication Usecase', () => {
     await expect(promise).rejects.toThrow()
   })
 
-  test('Should call UpdateAccessTokenRepository with correct token', async () => {
+  test('Should call UpdateAccessTokenRepository with correct values', async () => {
     const { sut, updateAccessTokenRepositoryStub } = makeSut()
 
     const updateSpy = jest.spyOn(updateAccessTokenRepositoryStub, 'updateToken')
@@ -228,7 +233,10 @@ describe('DbAuthentication Usecase', () => {
       password: 'any_password'
     })
 
-    expect(updateSpy).toHaveBeenCalledWith('any_token')
+    expect(updateSpy).toHaveBeenCalledWith({
+      token: 'any_token',
+      id: 'any_id'
+    })
   })
 
   test('Should throw if UpdateAccessTokenRepository throws', async () => {
