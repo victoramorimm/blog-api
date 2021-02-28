@@ -29,7 +29,7 @@ describe('Bcrypt Adapter', () => {
       expect(hashSpy).toHaveBeenCalledWith('any_value', salt)
     })
 
-    test('Should return a valid hash on success', async () => {
+    test('Should return a valid hash on hash success', async () => {
       const sut = makeSut()
 
       const hash = await sut.hash('any_value')
@@ -64,6 +64,32 @@ describe('Bcrypt Adapter', () => {
       })
 
       expect(compareSpy).toHaveBeenCalledWith('any_value', 'compare_value')
+    })
+
+    test('Should return false if compare returns false ', async () => {
+      const sut = makeSut()
+
+      jest
+        .spyOn(bcrypt, 'compare')
+        .mockReturnValueOnce(new Promise((resolve) => resolve(false)))
+
+      const isCompareValid = await sut.compare({
+        value: 'any_value',
+        valueToCompare: 'compare_value'
+      })
+
+      expect(isCompareValid).toBeFalsy()
+    })
+
+    test('Should return true on compare success', async () => {
+      const sut = makeSut()
+
+      const isCompareValid = await sut.compare({
+        value: 'any_value',
+        valueToCompare: 'compare_value'
+      })
+
+      expect(isCompareValid).toBeTruthy()
     })
   })
 })
