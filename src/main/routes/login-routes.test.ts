@@ -27,7 +27,7 @@ describe('Login Routes', () => {
     await accountCollection.deleteMany({})
   })
 
-  test('Should return 200 on success', async () => {
+  test('Should return 200 on login', async () => {
     const password = await hash('123456', 12)
 
     await accountCollection.insertOne({
@@ -42,7 +42,7 @@ describe('Login Routes', () => {
       .expect(200)
   })
 
-  test('Should return 401 on success', async () => {
+  test('Should return 401 on login', async () => {
     await request(app)
       .post('/api/login')
       .send(makeFakeAuthenticationData())

@@ -25,7 +25,7 @@ describe('SignUp Routes', () => {
     await accountCollection.deleteMany({})
   })
 
-  test('Should return an account on success', async () => {
+  test('Should return 200 on signup', async () => {
     await request(app)
       .post('/api/signup')
       .send(makeFakeAccountData())
