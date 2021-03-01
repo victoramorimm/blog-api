@@ -3,6 +3,10 @@ import { AddAccountModel } from '../../../../data/models/add-account-model'
 import { MongoHelper } from '../helpers/mongo-helper'
 import { AccountMongoRepository } from './account-mongo-repository'
 
+const makeSut = (): AccountMongoRepository => {
+  return new AccountMongoRepository()
+}
+
 const makeFakeAccountData = (): AddAccountModel => ({
   name: 'any_name',
   email: 'any_email@mail.com',
@@ -12,7 +16,7 @@ const makeFakeAccountData = (): AddAccountModel => ({
 let accountCollection: Collection
 
 const insertAccountOnMemoryDb = async (): Promise<any> => {
-  await accountCollection.insertOne({
+  return await accountCollection.insertOne({
     name: 'any_name',
     email: 'any_email@mail.com',
     password: 'hashed_password'
@@ -36,7 +40,7 @@ describe('Account Mongo Repository', () => {
 
   describe('loadByEmail()', () => {
     test('Should return an account on loadByEmail success', async () => {
-      const sut = new AccountMongoRepository()
+      const sut = makeSut()
 
       await insertAccountOnMemoryDb()
 
@@ -50,7 +54,7 @@ describe('Account Mongo Repository', () => {
     })
 
     test('Should return null if loadByEmail fails', async () => {
-      const sut = new AccountMongoRepository()
+      const sut = makeSut()
 
       const account = await sut.loadByEmail('any_email@mail.com')
 
@@ -62,15 +66,35 @@ describe('Account Mongo Repository', () => {
     test('Should return an account on add success', async () => {
       const sut = new AccountMongoRepository()
 
-      const fakeAccountData = makeFakeAccountData()
-
-      const account = await sut.add(fakeAccountData)
+      const account = await sut.add(makeFakeAccountData())
 
       expect(account).toBeTruthy()
       expect(account.id).toBeTruthy()
       expect(account.name).toBe('any_name')
       expect(account.email).toBe('any_email@mail.com')
       expect(account.password).toBe('hashed_password')
+    })
+  })
+
+  describe('updateToken()', () => {
+    test('Should update the account accessToken on updateToken success', async () => {
+      const sut = makeSut()
+
+      const result = await insertAccountOnMemoryDb()
+
+      const accountReturnedByMemoryOnDb = result.ops[0]
+
+      const { _id } = accountReturnedByMemoryOnDb
+
+      await sut.updateAccessToken({
+        id: _id,
+        accessToken: 'any_token'
+      })
+
+      const account = await accountCollection.findOne({ _id })
+
+      expect(account).toBeTruthy()
+      expect(account.accessToken).toBe('any_token')
     })
   })
 })

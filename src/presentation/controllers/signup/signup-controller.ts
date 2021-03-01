@@ -2,16 +2,16 @@ import {
   AddAccount,
   HttpRequest,
   HttpResponse,
-  Controller
+  Controller,
+  EmailValidator,
+  makeRequiredFieldsValidationForSignUp
 } from './signup-protocols'
 import {
   EmailAlreadyInUseError,
   InvalidParamError,
-  MissingParamError,
   ServerError
 } from '../../errors'
 import { badRequest, forbidden, ok, serverError } from '../../helpers/http'
-import { EmailValidator } from '../../protocols'
 
 export class SignUpController implements Controller {
   constructor(
@@ -21,17 +21,12 @@ export class SignUpController implements Controller {
 
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const requiredFields = [
-        'name',
-        'email',
-        'password',
-        'passwordConfirmation'
-      ]
+      const missingFieldError = makeRequiredFieldsValidationForSignUp(
+        httpRequest
+      )
 
-      for (const field of requiredFields) {
-        if (!httpRequest.body[field]) {
-          return badRequest(new MissingParamError(field))
-        }
+      if (missingFieldError) {
+        return missingFieldError
       }
 
       const { email, name, password, passwordConfirmation } = httpRequest.body

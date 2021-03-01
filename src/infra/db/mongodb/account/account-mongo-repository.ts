@@ -1,13 +1,20 @@
 import { AccountReturnedByDbModel } from '../../../../data/models/account-returned-by-db-model'
 import { AddAccountModel } from '../../../../data/models/add-account-model'
 import {
+  UpdateAccessTokenRepository,
+  UpdateAccessTokenModel
+} from '../../../../data/protocols/db/account/update-access-token-repository'
+import {
   AddAccountRepository,
   LoadAccountByEmailRepository
-} from '../../../../data/usecases/db-add-account-protocols'
+} from '../../../../data/usecases/add-account/db-add-account-protocols'
 import { MongoHelper } from '../helpers/mongo-helper'
 
 export class AccountMongoRepository
-  implements LoadAccountByEmailRepository, AddAccountRepository {
+  implements
+    LoadAccountByEmailRepository,
+    AddAccountRepository,
+    UpdateAccessTokenRepository {
   async loadByEmail(email: string): Promise<AccountReturnedByDbModel> {
     const accountCollection = await MongoHelper.getCollection('accounts')
 
@@ -25,7 +32,28 @@ export class AccountMongoRepository
 
     const result = await accountCollection.insertOne(accountData)
 
-    const account = result.ops[0]
+    const accountReturnedByDb = result.ops[0]
+
+    return MongoHelper.makeAdapterForDefaultIdReturnedByDb(accountReturnedByDb)
+  }
+
+  async updateAccessToken(
+    updateAccessTokenData: UpdateAccessTokenModel
+  ): Promise<AccountReturnedByDbModel> {
+    const { id, accessToken } = updateAccessTokenData
+
+    const accountCollection = await MongoHelper.getCollection('accounts')
+
+    const account = await accountCollection.updateOne(
+      {
+        _id: id
+      },
+      {
+        $set: {
+          accessToken
+        }
+      }
+    )
 
     return MongoHelper.makeAdapterForDefaultIdReturnedByDb(account)
   }
