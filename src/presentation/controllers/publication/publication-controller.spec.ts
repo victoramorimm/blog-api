@@ -1,7 +1,11 @@
 import { PublicationReturnedByDb } from '../../../domain/models/publication/publication-returned-by-db'
 import { AddPublication } from '../../../domain/usecases/publication/add-publication'
-import { MaximumOfCharacters, MissingParamError } from '../../errors'
-import { badRequest } from '../../helpers/http'
+import {
+  MaximumOfCharacters,
+  MissingParamError,
+  ServerError
+} from '../../errors'
+import { badRequest, serverError } from '../../helpers/http'
 import { PublicationController } from './publication-controller'
 
 const makeAddPublicationStub = (): AddPublication => {
@@ -84,5 +88,25 @@ describe('Publication Controller', () => {
     await sut.handle(httpRequest)
 
     expect(addSpy).toHaveBeenCalledWith('any_publication')
+  })
+
+  test('Should return 500 if AddPublication throws', async () => {
+    const { sut, addPublicationStub } = makeSut()
+
+    jest
+      .spyOn(addPublicationStub, 'add')
+      .mockReturnValueOnce(
+        new Promise((resolve, reject) => reject(new Error()))
+      )
+
+    const httpRequest = {
+      body: {
+        publication: 'any_publication'
+      }
+    }
+
+    const httpResponse = await sut.handle(httpRequest)
+
+    expect(httpResponse).toEqual(serverError(new ServerError()))
   })
 })
