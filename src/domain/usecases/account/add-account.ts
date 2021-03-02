@@ -1,4 +1,4 @@
-import { AccountReturnedByDbModel } from '../models/account-returned-by-db'
+import { AccountReturnedByDbModel } from '../../models/account-returned-by-db'
 
 export interface AddAccountModel {
   name: string

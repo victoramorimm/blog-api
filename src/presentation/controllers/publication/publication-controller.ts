@@ -1,4 +1,4 @@
-import { AddPublication } from '../../../domain/usecases/add-publication'
+import { AddPublication } from '../../../domain/usecases/publication/add-publication'
 import { MaximumOfCharacters, MissingParamError } from '../../errors'
 import { badRequest } from '../../helpers/http'
 import { Controller, HttpRequest, HttpResponse } from '../../protocols'

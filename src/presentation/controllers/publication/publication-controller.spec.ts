@@ -1,5 +1,5 @@
 import { PublicationReturnedByDb } from '../../../domain/models/publication-returned-by-db'
-import { AddPublication } from '../../../domain/usecases/add-publication'
+import { AddPublication } from '../../../domain/usecases/publication/add-publication'
 import { MaximumOfCharacters, MissingParamError } from '../../errors'
 import { badRequest } from '../../helpers/http'
 import { PublicationController } from './publication-controller'

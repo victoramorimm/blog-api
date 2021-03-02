@@ -1,7 +1,7 @@
 import { hash } from 'bcrypt'
 import { Collection } from 'mongodb'
 import request from 'supertest'
-import { AuthenticationModel } from '../../domain/usecases/authentication'
+import { AuthenticationModel } from '../../domain/usecases/account/authentication'
 import { MongoHelper } from '../../infra/db/mongodb/helpers/mongo-helper'
 import app from '../config/app'
 

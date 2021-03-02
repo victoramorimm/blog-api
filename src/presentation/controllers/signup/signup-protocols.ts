@@ -1,5 +1,5 @@
 export * from '../../protocols'
-export * from '../../../domain/usecases/add-account'
-export * from '../../../domain/usecases/add-account'
+export * from '../../../domain/usecases/account/add-account'
+export * from '../../../domain/usecases/account/add-account'
 export * from '../../../domain/models/account-returned-by-db'
 export * from '../../factories/required-fields/signup/required-fields-for-signup'
