@@ -6,7 +6,14 @@ import {
   ServerError
 } from '../../errors'
 import { badRequest, ok, serverError } from '../../helpers/http'
+import { HttpRequest } from '../../protocols'
 import { PublicationController } from './publication-controller'
+
+const makeFakeHttpRequest = (): HttpRequest => ({
+  body: {
+    publication: 'any_publication'
+  }
+})
 
 const makePublicationBiggerThan500Characters = (): string => {
   return new Array(501 + 1).join(' ')
@@ -79,11 +86,7 @@ describe('Publication Controller', () => {
 
     const addSpy = jest.spyOn(addPublicationStub, 'add')
 
-    const httpRequest = {
-      body: {
-        publication: 'any_publication'
-      }
-    }
+    const httpRequest = makeFakeHttpRequest()
 
     await sut.handle(httpRequest)
 
@@ -99,11 +102,7 @@ describe('Publication Controller', () => {
         new Promise((resolve, reject) => reject(new Error()))
       )
 
-    const httpRequest = {
-      body: {
-        publication: 'any_publication'
-      }
-    }
+    const httpRequest = makeFakeHttpRequest()
 
     const httpResponse = await sut.handle(httpRequest)
 
@@ -113,11 +112,7 @@ describe('Publication Controller', () => {
   test('Should return 200 on success', async () => {
     const { sut } = makeSut()
 
-    const httpRequest = {
-      body: {
-        publication: 'any_publication'
-      }
-    }
+    const httpRequest = makeFakeHttpRequest()
 
     const httpResponse = await sut.handle(httpRequest)
 
