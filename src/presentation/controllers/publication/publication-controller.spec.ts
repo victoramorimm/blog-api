@@ -116,11 +116,6 @@ describe('Publication Controller', () => {
 
     const httpResponse = await sut.handle(httpRequest)
 
-    expect(httpResponse).toEqual(
-      ok({
-        id: 'any_id',
-        publication: 'any_publication'
-      })
-    )
+    expect(httpResponse).toEqual(ok(makeFakePublicationReturnedByDb()))
   })
 })

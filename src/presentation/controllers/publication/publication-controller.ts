@@ -1,22 +1,23 @@
 import { AddPublication } from '../../../domain/usecases/publication/add-publication'
-import {
-  MaximumOfCharacters,
-  MissingParamError,
-  ServerError
-} from '../../errors'
+import { MaximumOfCharacters, ServerError } from '../../errors'
 import { badRequest, ok, serverError } from '../../helpers/http'
 import { Controller, HttpRequest, HttpResponse } from '../../protocols'
+import { makeRequiredFieldsValidationForPublication } from '../../factories/required-fields/publication/required-fields-validation-for-publication'
 
 export class PublicationController implements Controller {
   constructor(private readonly addPublication: AddPublication) {}
 
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const { publication } = httpRequest.body
+      const missingParamError = makeRequiredFieldsValidationForPublication(
+        httpRequest
+      )
 
-      if (!publication) {
-        return badRequest(new MissingParamError('publication'))
+      if (missingParamError) {
+        return missingParamError
       }
+
+      const { publication } = httpRequest.body
 
       if (publication.length > 500) {
         return badRequest(new MaximumOfCharacters())
