@@ -4,7 +4,7 @@ import {
   MissingParamError,
   ServerError
 } from '../../errors'
-import { badRequest, serverError } from '../../helpers/http'
+import { badRequest, ok, serverError } from '../../helpers/http'
 import { Controller, HttpRequest, HttpResponse } from '../../protocols'
 
 export class PublicationController implements Controller {
@@ -14,13 +14,17 @@ export class PublicationController implements Controller {
     try {
       const { publication } = httpRequest.body
 
+      if (!publication) {
+        return badRequest(new MissingParamError('publication'))
+      }
+
       if (publication.length > 500) {
         return badRequest(new MaximumOfCharacters())
       }
 
-      await this.addPublication.add(publication)
+      const publicationReturnedByDb = await this.addPublication.add(publication)
 
-      return badRequest(new MissingParamError('publication'))
+      return ok(publicationReturnedByDb)
     } catch (error) {
       return serverError(new ServerError())
     }
