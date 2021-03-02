@@ -1,8 +1,12 @@
-import { AddPublication } from '../../../domain/usecases/publication/add-publication'
+import {
+  AddPublication,
+  Controller,
+  HttpRequest,
+  HttpResponse,
+  makeRequiredFieldsValidationForPublication
+} from './publication-controller-protocols'
 import { MaximumOfCharacters, ServerError } from '../../errors'
 import { badRequest, ok, serverError } from '../../helpers/http'
-import { Controller, HttpRequest, HttpResponse } from '../../protocols'
-import { makeRequiredFieldsValidationForPublication } from '../../factories/required-fields/publication/required-fields-validation-for-publication'
 
 export class PublicationController implements Controller {
   constructor(private readonly addPublication: AddPublication) {}

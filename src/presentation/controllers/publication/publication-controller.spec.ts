@@ -1,13 +1,15 @@
-import { PublicationReturnedByDb } from '../../../domain/models/publication/publication-returned-by-db'
-import { AddPublication } from '../../../domain/usecases/publication/add-publication'
+import { PublicationController } from './publication-controller'
+import {
+  PublicationReturnedByDb,
+  AddPublication,
+  HttpRequest
+} from './publication-controller-protocols'
 import {
   MaximumOfCharacters,
   MissingParamError,
   ServerError
 } from '../../errors'
 import { badRequest, ok, serverError } from '../../helpers/http'
-import { HttpRequest } from '../../protocols'
-import { PublicationController } from './publication-controller'
 
 const makeFakeHttpRequest = (): HttpRequest => ({
   body: {
