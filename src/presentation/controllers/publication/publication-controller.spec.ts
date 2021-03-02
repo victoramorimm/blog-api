@@ -8,16 +8,16 @@ import {
 import { badRequest, ok, serverError } from '../../helpers/http'
 import { PublicationController } from './publication-controller'
 
+const makeFakePublicationReturnedByDb = (): PublicationReturnedByDb => ({
+  id: 'any_id',
+  publication: 'any_publication'
+})
+
 const makeAddPublicationStub = (): AddPublication => {
   class AddPublicationStub implements AddPublication {
     async add(publication: string): Promise<PublicationReturnedByDb> {
-      const fakePublicationReturnedByDb: PublicationReturnedByDb = {
-        id: 'any_id',
-        publication: 'any_publication'
-      }
-
       return await new Promise((resolve) =>
-        resolve(fakePublicationReturnedByDb)
+        resolve(makeFakePublicationReturnedByDb())
       )
     }
   }
