@@ -5,7 +5,7 @@ import {
   MissingParamError,
   ServerError
 } from '../../errors'
-import { badRequest, serverError } from '../../helpers/http'
+import { badRequest, ok, serverError } from '../../helpers/http'
 import { PublicationController } from './publication-controller'
 
 const makeAddPublicationStub = (): AddPublication => {
@@ -46,9 +46,7 @@ describe('Publication Controller', () => {
     const { sut } = makeSut()
 
     const httpRequest = {
-      body: {
-        publication: 'any_publication'
-      }
+      body: {}
     }
 
     const httpResponse = await sut.handle(httpRequest)
@@ -108,5 +106,24 @@ describe('Publication Controller', () => {
     const httpResponse = await sut.handle(httpRequest)
 
     expect(httpResponse).toEqual(serverError(new ServerError()))
+  })
+
+  test('Should return 200 on success', async () => {
+    const { sut } = makeSut()
+
+    const httpRequest = {
+      body: {
+        publication: 'any_publication'
+      }
+    }
+
+    const httpResponse = await sut.handle(httpRequest)
+
+    expect(httpResponse).toEqual(
+      ok({
+        id: 'any_id',
+        publication: 'any_publication'
+      })
+    )
   })
 })
