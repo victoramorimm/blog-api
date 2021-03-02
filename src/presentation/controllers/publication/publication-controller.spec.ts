@@ -1,4 +1,4 @@
-import { PublicationReturnedByDb } from '../../../domain/models/publication-returned-by-db'
+import { PublicationReturnedByDb } from '../../../domain/models/publication/publication-returned-by-db'
 import { AddPublication } from '../../../domain/usecases/publication/add-publication'
 import { MaximumOfCharacters, MissingParamError } from '../../errors'
 import { badRequest } from '../../helpers/http'
