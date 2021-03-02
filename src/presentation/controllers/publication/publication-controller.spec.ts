@@ -8,6 +8,10 @@ import {
 import { badRequest, ok, serverError } from '../../helpers/http'
 import { PublicationController } from './publication-controller'
 
+const makePublicationBiggerThan500Characters = (): string => {
+  return new Array(501 + 1).join(' ')
+}
+
 const makeFakePublicationReturnedByDb = (): PublicationReturnedByDb => ({
   id: 'any_id',
   publication: 'any_publication'
@@ -59,11 +63,9 @@ describe('Publication Controller', () => {
   test('Should return 400 if publication has more than 500 characters', async () => {
     const { sut } = makeSut()
 
-    const publicationWithMoreThan500Characters = new Array(501 + 1).join(' ')
-
     const httpRequest = {
       body: {
-        publication: publicationWithMoreThan500Characters
+        publication: makePublicationBiggerThan500Characters()
       }
     }
 
