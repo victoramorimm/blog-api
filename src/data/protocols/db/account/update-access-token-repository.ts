@@ -1,4 +1,4 @@
-import { AccountReturnedByDbModel } from '../../../models/account-returned-by-db-model'
+import { AccountReturnedByDbModel } from '../../../../domain/models/account/account-returned-by-db'
 
 export interface UpdateAccessTokenModel {
   accessToken: string
