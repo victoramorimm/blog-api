@@ -4,7 +4,7 @@ import {
   AuthenticationModel,
   EmailValidator,
   HttpRequest
-} from './login-controller-protocols'
+} from './login-protocols'
 import {
   InvalidParamError,
   MissingParamError,

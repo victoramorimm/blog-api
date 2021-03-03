@@ -5,7 +5,7 @@ import {
   HttpResponse,
   Authentication,
   makeRequiredFieldsValidationForLogin
-} from './login-controller-protocols'
+} from './login-protocols'
 import {
   AuthenticationError,
   InvalidParamError,
