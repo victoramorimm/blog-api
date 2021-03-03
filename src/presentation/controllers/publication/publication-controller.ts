@@ -4,7 +4,7 @@ import {
   HttpRequest,
   HttpResponse,
   makeRequiredFieldsValidationForPublication
-} from './publication-controller-protocols'
+} from './publication-protocols'
 import { MaximumOfCharacters, ServerError } from '../../errors'
 import { badRequest, ok, serverError } from '../../helpers/http'
 

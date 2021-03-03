@@ -3,7 +3,7 @@ import {
   PublicationReturnedByDb,
   AddPublication,
   HttpRequest
-} from './publication-controller-protocols'
+} from './publication-protocols'
 import {
   MaximumOfCharacters,
   MissingParamError,
