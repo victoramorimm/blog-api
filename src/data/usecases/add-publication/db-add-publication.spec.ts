@@ -46,4 +46,18 @@ describe('DbAddPublication Usecase', () => {
 
     expect(addSpy).toHaveBeenCalledWith('any_publication')
   })
+
+  test('Should throw if AddPublicationRepository throws', async () => {
+    const { sut, addPublicationRepositoryStub } = makeSut()
+
+    jest
+      .spyOn(addPublicationRepositoryStub, 'add')
+      .mockReturnValueOnce(
+        new Promise((resolve, reject) => reject(new Error()))
+      )
+
+    const publication = sut.add('any_publication')
+
+    await expect(publication).rejects.toThrow()
+  })
 })
