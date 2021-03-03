@@ -3,16 +3,16 @@ import { AddPublication } from '../../../domain/usecases/publication/add-publica
 import { AddPublicationRepository } from '../../protocols/db/publication/add-publication-repository'
 import { DbAddPublication } from './db-add-publication'
 
+const makeFakePublicationReturnedByDb = (): PublicationReturnedByDb => ({
+  id: 'any_id',
+  publication: 'any_publication'
+})
+
 const makeAddPublicationRepositoryStub = (): AddPublicationRepository => {
   class AddPublicationRepositoryStub implements AddPublicationRepository {
     async add(publication: string): Promise<PublicationReturnedByDb> {
-      const fakePublicationReturnedByDb = {
-        id: 'any_id',
-        publication: 'any_publication'
-      }
-
       return await new Promise((resolve) =>
-        resolve(fakePublicationReturnedByDb)
+        resolve(makeFakePublicationReturnedByDb())
       )
     }
   }
@@ -66,9 +66,6 @@ describe('DbAddPublication Usecase', () => {
 
     const publication = await sut.add('any_publication')
 
-    expect(publication).toEqual({
-      id: 'any_id',
-      publication: 'any_publication'
-    })
+    expect(publication).toEqual(makeFakePublicationReturnedByDb())
   })
 })
