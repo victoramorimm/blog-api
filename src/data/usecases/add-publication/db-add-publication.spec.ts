@@ -60,4 +60,15 @@ describe('DbAddPublication Usecase', () => {
 
     await expect(publication).rejects.toThrow()
   })
+
+  test('Should return a publication on success', async () => {
+    const { sut } = makeSut()
+
+    const publication = await sut.add('any_publication')
+
+    expect(publication).toEqual({
+      id: 'any_id',
+      publication: 'any_publication'
+    })
+  })
 })
