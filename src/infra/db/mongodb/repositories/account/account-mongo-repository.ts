@@ -1,15 +1,15 @@
-import { AccountReturnedByDbModel } from '../../../../data/models/account-returned-by-db-model'
-import { AddAccountModel } from '../../../../data/models/add-account-model'
+import { AccountReturnedByDbModel } from '../../../../../data/models/account-returned-by-db-model'
+import { AddAccountModel } from '../../../../../data/models/add-account-model'
 import {
   UpdateAccessTokenRepository,
   UpdateAccessTokenModel
-} from '../../../../data/protocols/db/account/update-access-token-repository'
+} from '../../../../../data/protocols/db/account/update-access-token-repository'
 import {
   AddAccountRepository,
   LoadAccountByEmailRepository
-} from '../../../../data/usecases/add-account/db-add-account-protocols'
-import { makeAdaptationOfAccountIdReturnedByDb } from '../factories/account/adaptation-of-account-id-factory'
-import { MongoHelper } from '../helpers/mongo-helper'
+} from '../../../../../data/usecases/add-account/db-add-account-protocols'
+import { makeAdaptationOfAccountIdReturnedByDb } from '../../factories/account/adaptation-of-account-id-factory'
+import { MongoHelper } from '../../helpers/mongo-helper'
 
 export class AccountMongoRepository
   implements
