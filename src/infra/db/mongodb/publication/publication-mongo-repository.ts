@@ -1,9 +1,16 @@
 import { PublicationReturnedByDb } from '../../../../data/models/publication-returned-by-db'
 import { AddPublicationRepository } from '../../../../data/protocols/db/publication/add-publication-repository'
-import { makeAdditionOfPublicationOnDb } from '../factories/publication/addition-of-publication-on-db-factory'
+import { makeAdaptationOfPublicationIdReturnedByDb } from '../factories/publication/adaptation-of-publication-id-factory'
+import { MongoHelper } from '../helpers/mongo-helper'
 
 export class PublicationMongoRepository implements AddPublicationRepository {
   async add(publication: string): Promise<PublicationReturnedByDb> {
-    return await makeAdditionOfPublicationOnDb(publication)
+    const publicationCollection = await MongoHelper.getCollection(
+      'publications'
+    )
+
+    const result = await publicationCollection.insertOne({ publication })
+
+    return await makeAdaptationOfPublicationIdReturnedByDb(result)
   }
 }

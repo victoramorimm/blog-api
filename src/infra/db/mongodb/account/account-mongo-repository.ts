@@ -8,7 +8,7 @@ import {
   AddAccountRepository,
   LoadAccountByEmailRepository
 } from '../../../../data/usecases/add-account/db-add-account-protocols'
-import { makeAdditionOfAccountOnDb } from '../factories/account/addition-of-publication-on-db-factory'
+import { makeAdaptationOfAccountIdReturnedByDb } from '../factories/account/adaptation-of-account-id-factory'
 import { MongoHelper } from '../helpers/mongo-helper'
 
 export class AccountMongoRepository
@@ -29,7 +29,13 @@ export class AccountMongoRepository
   }
 
   async add(accountData: AddAccountModel): Promise<AccountReturnedByDbModel> {
-    return await makeAdditionOfAccountOnDb(accountData)
+    const publicationCollection = await MongoHelper.getCollection(
+      'publications'
+    )
+
+    const result = await publicationCollection.insertOne(accountData)
+
+    return await makeAdaptationOfAccountIdReturnedByDb(result)
   }
 
   async updateAccessToken(
