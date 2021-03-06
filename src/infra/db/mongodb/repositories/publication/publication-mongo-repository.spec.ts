@@ -1,6 +1,10 @@
 import { MongoHelper } from '../../helpers/mongo-helper'
 import { PublicationMongoRepository } from './publication-mongo-repository'
 
+export const makeSut = (): PublicationMongoRepository => {
+  return new PublicationMongoRepository()
+}
+
 describe('Publication Mongo Repository', () => {
   beforeAll(async () => {
     await MongoHelper.connect(process.env.MONGO_URL)
@@ -19,7 +23,7 @@ describe('Publication Mongo Repository', () => {
   })
 
   test('Should return a publication on add success', async () => {
-    const sut = new PublicationMongoRepository()
+    const sut = makeSut()
 
     const publication = await sut.add('any_publication')
 
