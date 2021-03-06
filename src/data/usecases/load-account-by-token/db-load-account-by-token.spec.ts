@@ -101,4 +101,17 @@ describe('DbLoadAccountByToken Usecase', () => {
 
     expect(account).toBeNull()
   })
+
+  test('Should return an account on success', async () => {
+    const { sut } = makeSut()
+
+    const account = await sut.load('any_token')
+
+    expect(account).toEqual({
+      id: 'any_id',
+      name: 'any_name',
+      email: 'any_email@mail.com',
+      password: 'hashed_password'
+    })
+  })
 })
