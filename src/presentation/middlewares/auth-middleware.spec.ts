@@ -5,24 +5,42 @@ import { forbidden } from '../helpers/http'
 import { HttpRequest } from '../protocols'
 import { AuthMiddleware } from './auth-middleware'
 
+const makeLoadAccountByTokenStub = (): LoadAccountByToken => {
+  class LoadAccountByTokenStub implements LoadAccountByToken {
+    async load(token: string): Promise<AccountReturnedByDbModel> {
+      const fakeAccount = {
+        id: 'any_id',
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        password: 'hashed_password'
+      }
+
+      return await new Promise((resolve) => resolve(fakeAccount))
+    }
+  }
+
+  return new LoadAccountByTokenStub()
+}
+
+type SutTypes = {
+  sut: AuthMiddleware
+  loadAccountByTokenStub: LoadAccountByToken
+}
+
+const makeSut = (): SutTypes => {
+  const loadAccountByTokenStub = makeLoadAccountByTokenStub()
+
+  const sut = new AuthMiddleware(loadAccountByTokenStub)
+
+  return {
+    sut,
+    loadAccountByTokenStub
+  }
+}
+
 describe('Auth Middleware', () => {
   test('Should return 403 if no x-access-token exists in headers', async () => {
-    class LoadAccountByTokenStub implements LoadAccountByToken {
-      async load(token: string): Promise<AccountReturnedByDbModel> {
-        const fakeAccount = {
-          id: 'any_id',
-          name: 'any_name',
-          email: 'any_email@mail.com',
-          password: 'hashed_password'
-        }
-
-        return await new Promise((resolve) => resolve(fakeAccount))
-      }
-    }
-
-    const loadAccountByTokenStub = new LoadAccountByTokenStub()
-
-    const sut = new AuthMiddleware(loadAccountByTokenStub)
+    const { sut } = makeSut()
 
     const httpResponse = await sut.handle({})
 
@@ -30,24 +48,9 @@ describe('Auth Middleware', () => {
   })
 
   test('Should call LoadAccountByToken with correct accessToken', async () => {
-    class LoadAccountByTokenStub implements LoadAccountByToken {
-      async load(token: string): Promise<AccountReturnedByDbModel> {
-        const fakeAccount = {
-          id: 'any_id',
-          name: 'any_name',
-          email: 'any_email@mail.com',
-          password: 'hashed_password'
-        }
-
-        return await new Promise((resolve) => resolve(fakeAccount))
-      }
-    }
-
-    const loadAccountByTokenStub = new LoadAccountByTokenStub()
+    const { sut, loadAccountByTokenStub } = makeSut()
 
     const loadSpy = jest.spyOn(loadAccountByTokenStub, 'load')
-
-    const sut = new AuthMiddleware(loadAccountByTokenStub)
 
     const httpRequest: HttpRequest = {
       headers: {
