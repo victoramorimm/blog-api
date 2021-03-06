@@ -5,15 +5,17 @@ import { forbidden } from '../helpers/http'
 import { HttpRequest } from '../protocols'
 import { AuthMiddleware } from './auth-middleware'
 
+export const makeFakeAccountReturnedByLoadAccountByToken = (): AccountReturnedByDbModel => ({
+  id: 'any_id',
+  name: 'any_name',
+  email: 'any_email@mail.com',
+  password: 'hashed_password'
+})
+
 const makeLoadAccountByTokenStub = (): LoadAccountByToken => {
   class LoadAccountByTokenStub implements LoadAccountByToken {
     async load(token: string): Promise<AccountReturnedByDbModel> {
-      const fakeAccount = {
-        id: 'any_id',
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        password: 'hashed_password'
-      }
+      const fakeAccount = makeFakeAccountReturnedByLoadAccountByToken()
 
       return await new Promise((resolve) => resolve(fakeAccount))
     }
