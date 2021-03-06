@@ -1,6 +1,6 @@
 import { Decrypter } from '../../protocols/criptography/decrypter'
 import { LoadAccountByTokenRepository } from '../../protocols/db/account/load-account-by-token-repository'
-import { AccountReturnedByDbModel } from '../add-account/db-add-account-protocols'
+import { AccountReturnedByDbModel } from '../../../domain/models/account/account-returned-by-db'
 import { DbLoadAccountByToken } from './db-load-account-by-token'
 
 const makeDecrypterStub = (): Decrypter => {
@@ -13,18 +13,22 @@ const makeDecrypterStub = (): Decrypter => {
   return new DecrypterStub()
 }
 
+const makeFakeAccountReturnedByLoadAccountByTokenRepository = (): AccountReturnedByDbModel => ({
+  id: 'any_id',
+  name: 'any_name',
+  email: 'any_email@mail.com',
+  password: 'hashed_password'
+})
+
 const makeLoadAccountByTokenRepositoryStub = (): LoadAccountByTokenRepository => {
   class LoadAccountByTokenRepositoryStub
     implements LoadAccountByTokenRepository {
     async loadByToken(token: string): Promise<AccountReturnedByDbModel> {
-      const fakeAccount = {
-        id: 'any_id',
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        password: 'hashed_password'
-      }
+      makeFakeAccountReturnedByLoadAccountByTokenRepository()
 
-      return await new Promise((resolve) => resolve(fakeAccount))
+      return await new Promise((resolve) =>
+        resolve(makeFakeAccountReturnedByLoadAccountByTokenRepository())
+      )
     }
   }
 
@@ -135,11 +139,8 @@ describe('DbLoadAccountByToken Usecase', () => {
 
     const account = await sut.load('any_token')
 
-    expect(account).toEqual({
-      id: 'any_id',
-      name: 'any_name',
-      email: 'any_email@mail.com',
-      password: 'hashed_password'
-    })
+    expect(account).toEqual(
+      makeFakeAccountReturnedByLoadAccountByTokenRepository()
+    )
   })
 })
