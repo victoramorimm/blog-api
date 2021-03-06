@@ -5,6 +5,12 @@ import { forbidden } from '../helpers/http'
 import { HttpRequest } from '../protocols'
 import { AuthMiddleware } from './auth-middleware'
 
+export const makeFakeHttpRequest = (): HttpRequest => ({
+  headers: {
+    'x-access-token': 'any_token'
+  }
+})
+
 export const makeFakeAccountReturnedByLoadAccountByToken = (): AccountReturnedByDbModel => ({
   id: 'any_id',
   name: 'any_name',
@@ -54,13 +60,7 @@ describe('Auth Middleware', () => {
 
     const loadSpy = jest.spyOn(loadAccountByTokenStub, 'load')
 
-    const httpRequest: HttpRequest = {
-      headers: {
-        'x-access-token': 'any_token'
-      }
-    }
-
-    await sut.handle(httpRequest)
+    await sut.handle(makeFakeHttpRequest())
 
     expect(loadSpy).toHaveBeenCalledWith('any_token')
   })
