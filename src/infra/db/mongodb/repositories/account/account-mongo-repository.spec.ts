@@ -48,9 +48,7 @@ describe('Account Mongo Repository', () => {
 
       expect(account).toBeTruthy()
       expect(account.id).toBeTruthy()
-      expect(account.name).toBe('any_name')
       expect(account.email).toBe('any_email@mail.com')
-      expect(account.password).toBe('hashed_password')
     })
 
     test('Should return null if loadByEmail fails', async () => {
@@ -64,7 +62,7 @@ describe('Account Mongo Repository', () => {
 
   describe('add()', () => {
     test('Should return an account on add success', async () => {
-      const sut = new AccountMongoRepository()
+      const sut = makeSut()
 
       const account = await sut.add(makeFakeAccountData())
 
