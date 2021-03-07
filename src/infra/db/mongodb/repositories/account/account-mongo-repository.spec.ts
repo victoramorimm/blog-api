@@ -23,6 +23,15 @@ const insertAccountOnMemoryDb = async (): Promise<any> => {
   })
 }
 
+const insertAccountWithAccessTokenOnMemoryDb = async (): Promise<any> => {
+  return await accountCollection.insertOne({
+    name: 'any_name',
+    email: 'any_email@mail.com',
+    password: 'hashed_password',
+    token: 'any_token'
+  })
+}
+
 describe('Account Mongo Repository', () => {
   beforeAll(async () => {
     await MongoHelper.connect(process.env.MONGO_URL)
@@ -48,7 +57,9 @@ describe('Account Mongo Repository', () => {
 
       expect(account).toBeTruthy()
       expect(account.id).toBeTruthy()
+      expect(account.name).toBe('any_name')
       expect(account.email).toBe('any_email@mail.com')
+      expect(account.password).toBe('hashed_password')
     })
 
     test('Should return null if loadByEmail fails', async () => {
@@ -93,6 +104,22 @@ describe('Account Mongo Repository', () => {
 
       expect(account).toBeTruthy()
       expect(account.accessToken).toBe('any_token')
+    })
+  })
+
+  describe('loadByToken()', () => {
+    test('Should return an account on loadByToken success', async () => {
+      const sut = makeSut()
+
+      await insertAccountWithAccessTokenOnMemoryDb()
+
+      const account = await sut.loadByToken('any_token')
+
+      expect(account).toBeTruthy()
+      expect(account.id).toBeTruthy()
+      expect(account.name).toBe('any_name')
+      expect(account.email).toBe('any_email@mail.com')
+      expect(account.password).toBe('hashed_password')
     })
   })
 })
