@@ -19,12 +19,14 @@ describe('Publication Routes', () => {
     await publicationCollection.deleteMany({})
   })
 
-  test('Should return 200 on publication', async () => {
-    await request(app)
-      .post('/api/publication')
-      .send({
-        publication: 'Publicação teste'
-      })
-      .expect(200)
+  describe('POST /surveys', () => {
+    test('Should return 403 on add publication without token', async () => {
+      await request(app)
+        .post('/api/publication')
+        .send({
+          publication: 'Publicação teste'
+        })
+        .expect(403)
+    })
   })
 })
