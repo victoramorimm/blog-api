@@ -1,5 +1,5 @@
-import { MongoHelper } from '../../helpers/mongo-helper'
 import { PublicationMongoRepository } from './publication-mongo-repository'
+import { MongoHelper } from './publication-mongo-repository-protocols'
 
 export const makeSut = (): PublicationMongoRepository => {
   return new PublicationMongoRepository()
