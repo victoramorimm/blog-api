@@ -1,5 +1,6 @@
 import { AccountReturnedByDbModel } from '../../../../../data/models/account-returned-by-db-model'
 import { AddAccountModel } from '../../../../../data/models/add-account-model'
+import { LoadAccountByTokenRepository } from '../../../../../data/protocols/db/account/load-account-by-token-repository'
 import {
   UpdateAccessTokenRepository,
   UpdateAccessTokenModel
@@ -15,7 +16,8 @@ export class AccountMongoRepository
   implements
     LoadAccountByEmailRepository,
     AddAccountRepository,
-    UpdateAccessTokenRepository {
+    UpdateAccessTokenRepository,
+    LoadAccountByTokenRepository {
   async loadByEmail(email: string): Promise<AccountReturnedByDbModel> {
     const accountCollection = await MongoHelper.getCollection('accounts')
 
@@ -55,6 +57,16 @@ export class AccountMongoRepository
         }
       }
     )
+
+    return MongoHelper.makeAdapterForDefaultIdReturnedByDb(account)
+  }
+
+  async loadByToken(token: string): Promise<AccountReturnedByDbModel> {
+    const accountCollection = await MongoHelper.getCollection('accounts')
+
+    const account = await accountCollection.findOne({
+      token
+    })
 
     return MongoHelper.makeAdapterForDefaultIdReturnedByDb(account)
   }
