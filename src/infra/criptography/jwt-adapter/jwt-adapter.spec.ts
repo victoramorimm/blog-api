@@ -69,14 +69,6 @@ describe('Jwt Adapter', () => {
       expect(value).toBe('any_value')
     })
 
-    test('Should return null if verify fails', async () => {
-      const sut = makeSut()
-
-      const value = await sut.decrypt('any_token')
-
-      expect(value).toBe('any_value')
-    })
-
     test('Should throw if verify throws', async () => {
       const sut = makeSut()
 
