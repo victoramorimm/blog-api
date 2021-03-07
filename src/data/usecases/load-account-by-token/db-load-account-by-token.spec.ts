@@ -59,7 +59,7 @@ const makeSut = (): SutTypes => {
 }
 
 describe('DbLoadAccountByToken Usecase', () => {
-  test('Should call Decrypter with correct value', async () => {
+  test('Should call Decrypter with correct token', async () => {
     const { sut, decrypterStub } = makeSut()
 
     const decryptSpy = jest.spyOn(decrypterStub, 'decrypt')
@@ -95,7 +95,7 @@ describe('DbLoadAccountByToken Usecase', () => {
     await expect(account).rejects.toThrow()
   })
 
-  test('Should call LoadAccountByTokenRepository with correct value', async () => {
+  test('Should call LoadAccountByTokenRepository with correct token', async () => {
     const { sut, loadAccountByTokenRepositoryStub } = makeSut()
 
     const loadByTokenSpy = jest.spyOn(
