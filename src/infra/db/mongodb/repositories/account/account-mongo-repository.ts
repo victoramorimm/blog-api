@@ -9,7 +9,6 @@ import {
   AddAccountRepository,
   LoadAccountByEmailRepository
 } from '../../../../../data/usecases/add-account/db-add-account-protocols'
-import { makeAdaptationOfAccountIdReturnedByDb } from '../../factories/account/adaptation-of-account-id-factory'
 import { MongoHelper } from '../../helpers/mongo-helper'
 
 export class AccountMongoRepository
@@ -37,7 +36,9 @@ export class AccountMongoRepository
 
     const result = await publicationCollection.insertOne(accountData)
 
-    return await makeAdaptationOfAccountIdReturnedByDb(result)
+    const account = result.ops[0]
+
+    return MongoHelper.makeAdapterForDefaultIdReturnedByDb(account)
   }
 
   async updateAccessToken(
