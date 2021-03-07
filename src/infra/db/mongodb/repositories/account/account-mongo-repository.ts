@@ -68,6 +68,10 @@ export class AccountMongoRepository
       token
     })
 
-    return MongoHelper.makeAdapterForDefaultIdReturnedByDb(account)
+    if (account) {
+      return MongoHelper.makeAdapterForDefaultIdReturnedByDb(account)
+    }
+
+    return null
   }
 }
