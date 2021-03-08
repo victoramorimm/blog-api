@@ -6,7 +6,8 @@
 
 1. [Cadastro](./requirements/signup.md)
 2. [Login](./requirements/login.md)
-3. [Publicação](./requirements/publication.md)
+3. [Adicionar Publicação](./requirements/add-publication.md)
+4. [Carregar Publicações](./requirements/load-publications.md)
 
 > ## Princípios Utilizados:
 
