@@ -28,8 +28,8 @@ describe('Publication Routes', () => {
     await accountCollection.deleteMany({})
   })
 
-  describe('POST /surveys', () => {
-    test('Should return 403 on add publication without token', async () => {
+  describe('POST /publication', () => {
+    test('Should return 403 on add publication without accessToken', async () => {
       await request(app)
         .post('/api/publication')
         .send({
@@ -38,7 +38,7 @@ describe('Publication Routes', () => {
         .expect(403)
     })
 
-    test('Should return 200 on add publication with valid token', async () => {
+    test('Should return 200 on add publication with valid accessToken', async () => {
       const result = await accountCollection.insertOne({
         name: 'Victor Amorim',
         email: 'victorvmrgamer@gmail.com',
@@ -47,7 +47,7 @@ describe('Publication Routes', () => {
 
       const id = result.ops[0]._id
 
-      const token = jwt.sign({ id }, env.jwtSecret)
+      const accessToken = jwt.sign({ id }, env.jwtSecret)
 
       await accountCollection.updateOne(
         {
@@ -55,14 +55,14 @@ describe('Publication Routes', () => {
         },
         {
           $set: {
-            token
+            accessToken
           }
         }
       )
 
       await request(app)
         .post('/api/publication')
-        .set('x-access-token', token)
+        .set('x-access-token', accessToken)
         .send({
           publication: 'Publicação teste'
         })

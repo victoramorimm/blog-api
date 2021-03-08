@@ -17,23 +17,6 @@ const makeFakeAccountData = (): AddAccountModel => ({
 
 let accountCollection: Collection
 
-const insertAccountOnMemoryDb = async (): Promise<any> => {
-  return await accountCollection.insertOne({
-    name: 'any_name',
-    email: 'any_email@mail.com',
-    password: 'hashed_password'
-  })
-}
-
-const insertAccountWithAccessTokenOnMemoryDb = async (): Promise<any> => {
-  return await accountCollection.insertOne({
-    name: 'any_name',
-    email: 'any_email@mail.com',
-    password: 'hashed_password',
-    token: 'any_token'
-  })
-}
-
 describe('Account Mongo Repository', () => {
   beforeAll(async () => {
     await MongoHelper.connect(process.env.MONGO_URL)
@@ -48,6 +31,23 @@ describe('Account Mongo Repository', () => {
 
     await accountCollection.deleteMany({})
   })
+
+  const insertAccountOnMemoryDb = async (): Promise<any> => {
+    return await accountCollection.insertOne({
+      name: 'any_name',
+      email: 'any_email@mail.com',
+      password: 'hashed_password'
+    })
+  }
+
+  const insertAccountWithAccessTokenOnMemoryDb = async (): Promise<any> => {
+    return await accountCollection.insertOne({
+      name: 'any_name',
+      email: 'any_email@mail.com',
+      password: 'hashed_password',
+      accessToken: 'any_token'
+    })
+  }
 
   describe('loadByEmail()', () => {
     test('Should return an account on loadByEmail success', async () => {

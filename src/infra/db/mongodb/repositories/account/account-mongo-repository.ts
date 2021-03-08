@@ -58,11 +58,11 @@ export class AccountMongoRepository
     return MongoHelper.makeAdapterForDefaultIdReturnedByDb(account)
   }
 
-  async loadByToken(token: string): Promise<AccountReturnedByDbModel> {
+  async loadByToken(accessToken: string): Promise<AccountReturnedByDbModel> {
     const accountCollection = await MongoHelper.getCollection('accounts')
 
     const account = await accountCollection.findOne({
-      token
+      accessToken
     })
 
     if (account) {

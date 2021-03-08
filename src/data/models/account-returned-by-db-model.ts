@@ -3,5 +3,5 @@ export interface AccountReturnedByDbModel {
   name: string
   email: string
   password: string
-  token?: string
+  accessToken?: string
 }
