@@ -28,11 +28,9 @@ export class AccountMongoRepository
   }
 
   async add(accountData: AddAccountModel): Promise<AccountReturnedByDbModel> {
-    const publicationCollection = await MongoHelper.getCollection(
-      'publications'
-    )
+    const accountCollection = await MongoHelper.getCollection('accounts')
 
-    const result = await publicationCollection.insertOne(accountData)
+    const result = await accountCollection.insertOne(accountData)
 
     const account = result.ops[0]
 
