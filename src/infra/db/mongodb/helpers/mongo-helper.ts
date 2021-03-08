@@ -18,9 +18,9 @@ export const MongoHelper = {
     return this.client.db().collection(name)
   },
 
-  makeAdapterForDefaultIdReturnedByDb: (account: any) => {
-    const { _id, ...accountWithoutId } = account
+  makeAdapterForDefaultIdReturnedByDb: (dataReturnedByDb: any) => {
+    const { _id, ...dataWithoutId } = dataReturnedByDb
 
-    return Object.assign({}, accountWithoutId, { id: _id })
+    return Object.assign({}, dataWithoutId, { id: _id })
   }
 }
