@@ -1,6 +1,6 @@
-import { PublicationController } from '../../../presentation/controllers/publication/publication-controller'
+import { AddPublicationController } from '../../../presentation/controllers/publication/add-publication/add-publication-controller'
 import { makeDbAddPublication } from '../usecases/db-add-publication-factory'
 
-export const makePublicationController = (): PublicationController => {
-  return new PublicationController(makeDbAddPublication())
+export const makePublicationController = (): AddPublicationController => {
+  return new AddPublicationController(makeDbAddPublication())
 }

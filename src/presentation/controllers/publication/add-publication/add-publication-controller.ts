@@ -4,11 +4,11 @@ import {
   HttpRequest,
   HttpResponse,
   makeRequiredFieldsValidationForPublication
-} from './publication-protocols'
-import { MaximumOfCharacters, ServerError } from '../../errors'
-import { badRequest, ok, serverError } from '../../helpers/http'
+} from './add-publication-protocols'
+import { MaximumOfCharacters, ServerError } from '../../../errors'
+import { badRequest, ok, serverError } from '../../../helpers/http'
 
-export class PublicationController implements Controller {
+export class AddPublicationController implements Controller {
   constructor(private readonly addPublication: AddPublication) {}
 
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {

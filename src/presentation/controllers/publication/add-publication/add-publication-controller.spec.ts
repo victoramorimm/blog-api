@@ -1,15 +1,15 @@
-import { PublicationController } from './publication-controller'
+import { AddPublicationController } from './add-publication-controller'
 import {
   PublicationReturnedByDb,
   AddPublication,
   HttpRequest
-} from './publication-protocols'
+} from './add-publication-protocols'
 import {
   MaximumOfCharacters,
   MissingParamError,
   ServerError
-} from '../../errors'
-import { badRequest, ok, serverError } from '../../helpers/http'
+} from '../../../errors'
+import { badRequest, ok, serverError } from '../../../helpers/http'
 
 const makeFakeHttpRequest = (): HttpRequest => ({
   body: {
@@ -17,7 +17,7 @@ const makeFakeHttpRequest = (): HttpRequest => ({
   }
 })
 
-const makePublicationBiggerThan500Characters = (): string => {
+const makeAddPublicationBiggerThan500Characters = (): string => {
   return new Array(501 + 1).join(' ')
 }
 
@@ -39,14 +39,14 @@ const makeAddPublicationStub = (): AddPublication => {
 }
 
 type SutTypes = {
-  sut: PublicationController
+  sut: AddPublicationController
   addPublicationStub: AddPublication
 }
 
 const makeSut = (): SutTypes => {
   const addPublicationStub = makeAddPublicationStub()
 
-  const sut = new PublicationController(addPublicationStub)
+  const sut = new AddPublicationController(addPublicationStub)
 
   return {
     sut,
@@ -74,7 +74,7 @@ describe('Publication Controller', () => {
 
     const httpRequest = {
       body: {
-        publication: makePublicationBiggerThan500Characters()
+        publication: makeAddPublicationBiggerThan500Characters()
       }
     }
 
