@@ -20,19 +20,37 @@ const makeFakePublicationArray = (): PublicationReturnedByDb[] => {
   ]
 }
 
+const makeLoadPublicationsStub = (): LoadPublications => {
+  class LoadPublicationsStub implements LoadPublications {
+    async load(accountId: string): Promise<PublicationReturnedByDb[]> {
+      const fakePublicationArray = makeFakePublicationArray()
+
+      return await new Promise((resolve) => resolve(fakePublicationArray))
+    }
+  }
+
+  return new LoadPublicationsStub()
+}
+
+type SutTypes = {
+  sut: LoadPublicationsController
+  loadPublicationsStub: LoadPublications
+}
+
+const makeSut = (): SutTypes => {
+  const loadPublicationsStub = makeLoadPublicationsStub()
+
+  const sut = new LoadPublicationsController(loadPublicationsStub)
+
+  return {
+    sut,
+    loadPublicationsStub
+  }
+}
+
 describe('LoadPublications Controller', () => {
   test('Should return 400 if no accountId is provided', async () => {
-    class LoadPublicationsStub implements LoadPublications {
-      async load(accountId: string): Promise<PublicationReturnedByDb[]> {
-        const fakePublicationArray = makeFakePublicationArray()
-
-        return await new Promise((resolve) => resolve(fakePublicationArray))
-      }
-    }
-
-    const loadPublicationsStub = new LoadPublicationsStub()
-
-    const sut = new LoadPublicationsController(loadPublicationsStub)
+    const { sut } = makeSut()
 
     const httpRequest = {
       params: {}
@@ -44,19 +62,9 @@ describe('LoadPublications Controller', () => {
   })
 
   test('Should call LoadPublications with correct value', async () => {
-    class LoadPublicationsStub implements LoadPublications {
-      async load(accountId: string): Promise<PublicationReturnedByDb[]> {
-        const fakePublicationArray = makeFakePublicationArray()
-
-        return await new Promise((resolve) => resolve(fakePublicationArray))
-      }
-    }
-
-    const loadPublicationsStub = new LoadPublicationsStub()
+    const { sut, loadPublicationsStub } = makeSut()
 
     const loadSpy = jest.spyOn(loadPublicationsStub, 'load')
-
-    const sut = new LoadPublicationsController(loadPublicationsStub)
 
     const httpRequest: HttpRequest = {
       params: {
