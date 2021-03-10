@@ -1,6 +1,6 @@
 import { LoadPublications } from '../../../../domain/usecases/publication/load-publications'
 import { MissingParamError, ServerError } from '../../../errors'
-import { badRequest, ok, serverError } from '../../../helpers/http'
+import { badRequest, noContent, ok, serverError } from '../../../helpers/http'
 import {
   HttpRequest,
   PublicationReturnedByDb
@@ -95,6 +95,20 @@ describe('LoadPublications Controller', () => {
     const httpResponse = await sut.handle(httpRequest)
 
     expect(httpResponse).toEqual(serverError(new ServerError()))
+  })
+
+  test('Should return 204 if publications length is 0', async () => {
+    const { sut, loadPublicationsStub } = makeSut()
+
+    jest
+      .spyOn(loadPublicationsStub, 'load')
+      .mockReturnValueOnce(new Promise((resolve) => resolve([])))
+
+    const httpRequest: HttpRequest = makeFakeHttpRequest()
+
+    const httpResponse = await sut.handle(httpRequest)
+
+    expect(httpResponse).toEqual(noContent())
   })
 
   test('Should return 200 on success', async () => {
