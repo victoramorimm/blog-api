@@ -1,6 +1,6 @@
 import { LoadPublications } from '../../../../domain/usecases/publication/load-publications'
-import { MissingParamError } from '../../../errors'
-import { badRequest } from '../../../helpers/http'
+import { MissingParamError, ServerError } from '../../../errors'
+import { badRequest, serverError } from '../../../helpers/http'
 import {
   Controller,
   HttpRequest,
@@ -11,10 +11,14 @@ export class LoadPublicationsController implements Controller {
   constructor(private readonly loadPublications: LoadPublications) {}
 
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
-    const { accountId } = httpRequest.params
+    try {
+      const { accountId } = httpRequest.params
 
-    await this.loadPublications.load(accountId)
+      await this.loadPublications.load(accountId)
 
-    return badRequest(new MissingParamError('accountId'))
+      return badRequest(new MissingParamError('accountId'))
+    } catch (error) {
+      return serverError(new ServerError())
+    }
   }
 }
