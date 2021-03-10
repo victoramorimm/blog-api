@@ -6,7 +6,7 @@ export const ok = (data: any): HttpResponse => ({
 })
 
 export const noContent = (): HttpResponse => ({
-  statusCode: 200,
+  statusCode: 204,
   body: null
 })
 
@@ -23,6 +23,11 @@ export const unauthorized = (error: Error): HttpResponse => ({
 export const forbidden = (error: Error): HttpResponse => ({
   statusCode: 403,
   body: error
+})
+
+export const notFound = (): HttpResponse => ({
+  statusCode: 404,
+  body: 'Page not found'
 })
 
 export const serverError = (error: Error): HttpResponse => ({

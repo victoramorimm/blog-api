@@ -1,6 +1,12 @@
 import { LoadPublications } from '../../../../domain/usecases/publication/load-publications'
 import { MissingParamError, ServerError } from '../../../errors'
-import { badRequest, noContent, ok, serverError } from '../../../helpers/http'
+import {
+  badRequest,
+  noContent,
+  notFound,
+  ok,
+  serverError
+} from '../../../helpers/http'
 import {
   Controller,
   HttpRequest,
@@ -19,6 +25,10 @@ export class LoadPublicationsController implements Controller {
         const publications: PublicationReturnedByDb[] = await this.loadPublications.load(
           accountId
         )
+
+        if (!publications) {
+          return notFound()
+        }
 
         return publications.length ? ok(publications) : noContent()
       }
