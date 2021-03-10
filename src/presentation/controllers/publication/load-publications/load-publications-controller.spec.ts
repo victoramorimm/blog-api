@@ -7,6 +7,12 @@ import {
 } from '../add-publication/add-publication-protocols'
 import { LoadPublicationsController } from './load-publications-controller'
 
+const makeFakeHttpRequest = (): HttpRequest => ({
+  params: {
+    accountId: 'any_id'
+  }
+})
+
 const makeFakePublicationsReturnedByDb = (): PublicationReturnedByDb[] => {
   return [
     {
@@ -70,11 +76,7 @@ describe('LoadPublications Controller', () => {
 
     const loadSpy = jest.spyOn(loadPublicationsStub, 'load')
 
-    const httpRequest: HttpRequest = {
-      params: {
-        accountId: 'any_id'
-      }
-    }
+    const httpRequest: HttpRequest = makeFakeHttpRequest()
 
     await sut.handle(httpRequest)
 
@@ -90,11 +92,7 @@ describe('LoadPublications Controller', () => {
         new Promise((resolve, reject) => reject(new Error()))
       )
 
-    const httpRequest: HttpRequest = {
-      params: {
-        accountId: 'any_id'
-      }
-    }
+    const httpRequest: HttpRequest = makeFakeHttpRequest()
 
     const httpResponse = await sut.handle(httpRequest)
 
