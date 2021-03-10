@@ -1,6 +1,6 @@
 import { LoadPublications } from '../../../../domain/usecases/publication/load-publications'
 import { MissingParamError, ServerError } from '../../../errors'
-import { badRequest, serverError } from '../../../helpers/http'
+import { badRequest, ok, serverError } from '../../../helpers/http'
 import {
   HttpRequest,
   PublicationReturnedByDb
@@ -61,9 +61,7 @@ describe('LoadPublications Controller', () => {
     const { sut } = makeSut()
 
     const httpRequest: HttpRequest = {
-      params: {
-        accountId: 'any_id'
-      }
+      params: {}
     }
 
     const httpResponse = await sut.handle(httpRequest)
@@ -97,5 +95,15 @@ describe('LoadPublications Controller', () => {
     const httpResponse = await sut.handle(httpRequest)
 
     expect(httpResponse).toEqual(serverError(new ServerError()))
+  })
+
+  test('Should return 200 on success', async () => {
+    const { sut } = makeSut()
+
+    const httpRequest: HttpRequest = makeFakeHttpRequest()
+
+    const httpResponse = await sut.handle(httpRequest)
+
+    expect(httpResponse).toEqual(ok(makeFakePublicationsReturnedByDb()))
   })
 })
