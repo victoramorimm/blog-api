@@ -1,6 +1,6 @@
 import { LoadPublications } from '../../../../domain/usecases/publication/load-publications'
-import { MissingParamError } from '../../../errors'
-import { badRequest } from '../../../helpers/http'
+import { MissingParamError, ServerError } from '../../../errors'
+import { badRequest, serverError } from '../../../helpers/http'
 import {
   HttpRequest,
   PublicationReturnedByDb
@@ -79,5 +79,25 @@ describe('LoadPublications Controller', () => {
     await sut.handle(httpRequest)
 
     expect(loadSpy).toHaveBeenCalledWith('any_id')
+  })
+
+  test('Should return 500 if LoadPublications throws', async () => {
+    const { sut, loadPublicationsStub } = makeSut()
+
+    jest
+      .spyOn(loadPublicationsStub, 'load')
+      .mockReturnValueOnce(
+        new Promise((resolve, reject) => reject(new Error()))
+      )
+
+    const httpRequest: HttpRequest = {
+      params: {
+        accountId: 'any_id'
+      }
+    }
+
+    const httpResponse = await sut.handle(httpRequest)
+
+    expect(httpResponse).toEqual(serverError(new ServerError()))
   })
 })
