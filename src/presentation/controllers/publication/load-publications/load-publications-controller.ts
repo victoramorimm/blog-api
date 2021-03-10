@@ -1,6 +1,6 @@
 import { LoadPublications } from '../../../../domain/usecases/publication/load-publications'
 import { MissingParamError, ServerError } from '../../../errors'
-import { badRequest, serverError } from '../../../helpers/http'
+import { badRequest, ok, serverError } from '../../../helpers/http'
 import {
   Controller,
   HttpRequest,
@@ -14,7 +14,11 @@ export class LoadPublicationsController implements Controller {
     try {
       const { accountId } = httpRequest.params
 
-      await this.loadPublications.load(accountId)
+      if (accountId) {
+        const publications = await this.loadPublications.load(accountId)
+
+        return ok(publications)
+      }
 
       return badRequest(new MissingParamError('accountId'))
     } catch (error) {
