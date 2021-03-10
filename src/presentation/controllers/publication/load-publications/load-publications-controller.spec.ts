@@ -7,21 +7,25 @@ import {
 } from '../add-publication/add-publication-protocols'
 import { LoadPublicationsController } from './load-publications-controller'
 
+const makeFakePublicationsReturnedByDb = (): PublicationReturnedByDb[] => {
+  return [
+    {
+      id: 'any_id',
+      publication: 'any_publication',
+      accountId: 'any_id'
+    },
+    {
+      id: 'other_id',
+      publication: 'other_publication',
+      accountId: 'other_id'
+    }
+  ]
+}
+
 const makeLoadPublicationsStub = (): LoadPublications => {
   class LoadPublicationsStub implements LoadPublications {
     async load(accountId: string): Promise<PublicationReturnedByDb[]> {
-      const fakePublications: PublicationReturnedByDb[] = [
-        {
-          id: 'any_id',
-          publication: 'any_publication',
-          accountId: 'any_id'
-        },
-        {
-          id: 'other_id',
-          publication: 'other_publication',
-          accountId: 'other_id'
-        }
-      ]
+      const fakePublications: PublicationReturnedByDb[] = makeFakePublicationsReturnedByDb()
 
       return fakePublications
     }
