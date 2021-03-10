@@ -7,9 +7,12 @@ export class DbAddPublication implements AddPublication {
     private readonly addPublicationRepository: AddPublicationRepository
   ) {}
 
-  async add(data: string): Promise<PublicationReturnedByDb> {
-    const publication = await this.addPublicationRepository.add(data)
+  async add(publication: string, accountId): Promise<PublicationReturnedByDb> {
+    const publicationReturnedByDb: PublicationReturnedByDb = await this.addPublicationRepository.add(
+      publication,
+      accountId
+    )
 
-    return publication
+    return publicationReturnedByDb
   }
 }

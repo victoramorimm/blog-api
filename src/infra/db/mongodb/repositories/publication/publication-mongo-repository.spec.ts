@@ -25,10 +25,11 @@ describe('Publication Mongo Repository', () => {
   test('Should return a publication on add success', async () => {
     const sut = makeSut()
 
-    const publication = await sut.add('any_publication')
+    const publication = await sut.add('any_publication', 'any_id')
 
     expect(publication).toBeTruthy()
     expect(publication.id).toBeTruthy()
     expect(publication.publication).toBe('any_publication')
+    expect(publication.accountId).toBe('any_id')
   })
 })

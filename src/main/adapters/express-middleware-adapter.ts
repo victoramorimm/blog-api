@@ -10,7 +10,9 @@ export const adaptMiddleware = (middleware: Middleware) => {
     const httpResponse = await middleware.handle(httpRequest)
 
     if (httpResponse.statusCode === 200) {
-      Object.assign(req, httpResponse.body)
+      const account = Object.assign(req, httpResponse.body)
+
+      req.accountId = account.accountId
 
       next()
     } else {

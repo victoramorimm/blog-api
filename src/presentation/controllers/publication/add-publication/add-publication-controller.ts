@@ -27,7 +27,12 @@ export class AddPublicationController implements Controller {
         return badRequest(new MaximumOfCharacters())
       }
 
-      const publicationReturnedByDb = await this.addPublication.add(publication)
+      const accountId = httpRequest.accountId
+
+      const publicationReturnedByDb = await this.addPublication.add(
+        publication,
+        accountId
+      )
 
       return ok(publicationReturnedByDb)
     } catch (error) {

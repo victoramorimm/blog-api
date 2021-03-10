@@ -14,7 +14,8 @@ import { badRequest, ok, serverError } from '../../../helpers/http'
 const makeFakeHttpRequest = (): HttpRequest => ({
   body: {
     publication: 'any_publication'
-  }
+  },
+  accountId: 'any_id'
 })
 
 const makeAddPublicationBiggerThan500Characters = (): string => {
@@ -23,7 +24,8 @@ const makeAddPublicationBiggerThan500Characters = (): string => {
 
 const makeFakePublicationReturnedByDb = (): PublicationReturnedByDb => ({
   id: 'any_id',
-  publication: 'any_publication'
+  publication: 'any_publication',
+  accountId: 'any_id'
 })
 
 const makeAddPublicationStub = (): AddPublication => {
@@ -92,7 +94,7 @@ describe('Publication Controller', () => {
 
     await sut.handle(httpRequest)
 
-    expect(addSpy).toHaveBeenCalledWith('any_publication')
+    expect(addSpy).toHaveBeenCalledWith('any_publication', 'any_id')
   })
 
   test('Should return 500 if AddPublication throws', async () => {

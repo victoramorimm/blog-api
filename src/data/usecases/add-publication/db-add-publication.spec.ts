@@ -5,7 +5,8 @@ import { DbAddPublication } from './db-add-publication'
 
 const makeFakePublicationReturnedByDb = (): PublicationReturnedByDb => ({
   id: 'any_id',
-  publication: 'any_publication'
+  publication: 'any_publication',
+  accountId: 'any_id'
 })
 
 const makeAddPublicationRepositoryStub = (): AddPublicationRepository => {
@@ -42,9 +43,9 @@ describe('DbAddPublication Usecase', () => {
 
     const addSpy = jest.spyOn(addPublicationRepositoryStub, 'add')
 
-    await sut.add('any_publication')
+    await sut.add('any_publication', 'any_id')
 
-    expect(addSpy).toHaveBeenCalledWith('any_publication')
+    expect(addSpy).toHaveBeenCalledWith('any_publication', 'any_id')
   })
 
   test('Should throw if AddPublicationRepository throws', async () => {
@@ -56,7 +57,7 @@ describe('DbAddPublication Usecase', () => {
         new Promise((resolve, reject) => reject(new Error()))
       )
 
-    const publication = sut.add('any_publication')
+    const publication = sut.add('any_publication', 'any_id')
 
     await expect(publication).rejects.toThrow()
   })
@@ -64,7 +65,7 @@ describe('DbAddPublication Usecase', () => {
   test('Should return a publication on success', async () => {
     const { sut } = makeSut()
 
-    const publication = await sut.add('any_publication')
+    const publication = await sut.add('any_publication', 'any_id')
 
     expect(publication).toEqual(makeFakePublicationReturnedByDb())
   })

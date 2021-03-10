@@ -5,12 +5,18 @@ import {
 } from './publication-mongo-repository-protocols'
 
 export class PublicationMongoRepository implements AddPublicationRepository {
-  async add(publication: string): Promise<PublicationReturnedByDbModel> {
+  async add(
+    publication: string,
+    accountId: string
+  ): Promise<PublicationReturnedByDbModel> {
     const publicationCollection = await MongoHelper.getCollection(
       'publications'
     )
 
-    const result = await publicationCollection.insertOne({ publication })
+    const result = await publicationCollection.insertOne({
+      publication,
+      accountId
+    })
 
     const publicationReturnedByDb = result.ops[0]
 
