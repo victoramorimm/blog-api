@@ -1,5 +1,7 @@
-import { PublicationReturnedByDbModel } from '../../models/publication-returned-by-db-model'
-import { LoadPublicationsRepository } from '../../protocols/db/publication/load-publications-repository'
+import {
+  PublicationReturnedByDbModel,
+  LoadPublicationsRepository
+} from './db-load-publications-protocols'
 import { DbLoadPublications } from './db-load-publications'
 
 const makeFakePublicationsReturnedByRepository = (): PublicationReturnedByDbModel[] => {
