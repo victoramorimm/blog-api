@@ -1,4 +1,10 @@
-import { LoadPublications } from '../../../../domain/usecases/publication/load-publications'
+import {
+  LoadPublications,
+  HttpRequest,
+  HttpResponse,
+  Controller,
+  PublicationReturnedByDb
+} from './load-publications-controller-protocols'
 import { MissingParamError, ServerError } from '../../../errors'
 import {
   badRequest,
@@ -7,12 +13,6 @@ import {
   ok,
   serverError
 } from '../../../helpers/http'
-import {
-  Controller,
-  HttpRequest,
-  HttpResponse,
-  PublicationReturnedByDb
-} from '../add-publication/add-publication-protocols'
 
 export class LoadPublicationsController implements Controller {
   constructor(private readonly loadPublications: LoadPublications) {}

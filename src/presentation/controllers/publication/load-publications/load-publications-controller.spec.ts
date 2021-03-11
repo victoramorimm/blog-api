@@ -1,4 +1,9 @@
-import { LoadPublications } from '../../../../domain/usecases/publication/load-publications'
+import { LoadPublicationsController } from './load-publications-controller'
+import {
+  LoadPublications,
+  HttpRequest,
+  PublicationReturnedByDb
+} from './load-publications-controller-protocols'
 import { MissingParamError, ServerError } from '../../../errors'
 import {
   badRequest,
@@ -7,11 +12,6 @@ import {
   serverError,
   notFound
 } from '../../../helpers/http'
-import {
-  HttpRequest,
-  PublicationReturnedByDb
-} from '../add-publication/add-publication-protocols'
-import { LoadPublicationsController } from './load-publications-controller'
 
 const makeFakeHttpRequest = (): HttpRequest => ({
   params: {
