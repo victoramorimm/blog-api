@@ -75,4 +75,16 @@ describe('DbLoadPublications Usecase', () => {
 
     expect(publications).toEqual(makeFakePublicationsReturnedByRepository())
   })
+
+  test('Should return an empty array when the length is 0', async () => {
+    const { sut, loadPublicationsRepositoryStub } = makeSut()
+
+    jest
+      .spyOn(loadPublicationsRepositoryStub, 'loadAll')
+      .mockReturnValueOnce(new Promise((resolve) => resolve([])))
+
+    const publications = await sut.load('any_id')
+
+    expect(publications).toEqual([])
+  })
 })
