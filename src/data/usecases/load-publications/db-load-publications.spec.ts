@@ -67,4 +67,12 @@ describe('DbLoadPublications Usecase', () => {
 
     expect(publications).toBeNull()
   })
+
+  test('Should return publications on success', async () => {
+    const { sut } = makeSut()
+
+    const publications = await sut.load('any_id')
+
+    expect(publications).toEqual(makeFakePublicationsReturnedByRepository())
+  })
 })
