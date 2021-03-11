@@ -22,14 +22,16 @@ describe('Publication Mongo Repository', () => {
     await publicationCollection.deleteMany({})
   })
 
-  test('Should return a publication on add success', async () => {
-    const sut = makeSut()
+  describe('add()', () => {
+    test('Should return a publication on add success', async () => {
+      const sut = makeSut()
 
-    const publication = await sut.add('any_publication', 'any_id')
+      const publication = await sut.add('any_publication', 'any_id')
 
-    expect(publication).toBeTruthy()
-    expect(publication.id).toBeTruthy()
-    expect(publication.publication).toBe('any_publication')
-    expect(publication.accountId).toBe('any_id')
+      expect(publication).toBeTruthy()
+      expect(publication.id).toBeTruthy()
+      expect(publication.publication).toBe('any_publication')
+      expect(publication.accountId).toBe('any_id')
+    })
   })
 })
