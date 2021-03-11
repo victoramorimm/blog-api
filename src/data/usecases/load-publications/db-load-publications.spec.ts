@@ -68,6 +68,20 @@ describe('DbLoadPublications Usecase', () => {
     expect(publications).toBeNull()
   })
 
+  test('Should throw if LoadPublicationsRepository throws', async () => {
+    const { sut, loadPublicationsRepositoryStub } = makeSut()
+
+    jest
+      .spyOn(loadPublicationsRepositoryStub, 'loadAll')
+      .mockReturnValueOnce(
+        new Promise((resolve, reject) => reject(new Error()))
+      )
+
+    const publications = sut.load('any_id')
+
+    await expect(publications).rejects.toThrow()
+  })
+
   test('Should return publications on success', async () => {
     const { sut } = makeSut()
 
