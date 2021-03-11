@@ -1,5 +1,0 @@
-export * from '../../../domain/usecases/account/authentication'
-export * from '../../../domain/models/account/account-returned-by-db'
-export * from '../../protocols/criptography/encrypter'
-export * from '../../protocols/criptography/hash-comparer'
-export * from '../../protocols/db/account/update-access-token-repository'
