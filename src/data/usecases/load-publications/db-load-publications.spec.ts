@@ -55,4 +55,16 @@ describe('DbLoadPublications Usecase', () => {
 
     expect(loadAllSpy).toHaveBeenCalledWith('any_id')
   })
+
+  test('Should return null if LoadPublicationsRepository returns null', async () => {
+    const { sut, loadPublicationsRepositoryStub } = makeSut()
+
+    jest
+      .spyOn(loadPublicationsRepositoryStub, 'loadAll')
+      .mockReturnValueOnce(new Promise((resolve) => resolve(null)))
+
+    const publications = await sut.load('any_id')
+
+    expect(publications).toBeNull()
+  })
 })
