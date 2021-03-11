@@ -1,5 +1,21 @@
+import { Collection } from 'mongodb'
 import { PublicationMongoRepository } from './publication-mongo-repository'
 import { MongoHelper } from './publication-mongo-repository-protocols'
+
+let publicationCollection: Collection
+
+export const insertPublicationsOnDbInMemory = async (): Promise<any> => {
+  return await publicationCollection.insertMany([
+    {
+      publication: 'any_publication',
+      accountId: 'any_id'
+    },
+    {
+      publication: 'other_publication',
+      accountId: 'any_id'
+    }
+  ])
+}
 
 export const makeSut = (): PublicationMongoRepository => {
   return new PublicationMongoRepository()
@@ -15,9 +31,7 @@ describe('Publication Mongo Repository', () => {
   })
 
   beforeEach(async () => {
-    const publicationCollection = await MongoHelper.getCollection(
-      'publications'
-    )
+    publicationCollection = await MongoHelper.getCollection('publications')
 
     await publicationCollection.deleteMany({})
   })
@@ -32,6 +46,20 @@ describe('Publication Mongo Repository', () => {
       expect(publication.id).toBeTruthy()
       expect(publication.publication).toBe('any_publication')
       expect(publication.accountId).toBe('any_id')
+    })
+  })
+
+  describe('loadAll()', () => {
+    test('Should load all publications on loadAll success', async () => {
+      const sut = makeSut()
+
+      await insertPublicationsOnDbInMemory()
+
+      const publications = await sut.loadAll('any_id')
+
+      expect(publications).toBeTruthy()
+      expect(publications[0].publication).toBe('any_publication')
+      expect(publications[1].publication).toBe('other_publication')
     })
   })
 })
