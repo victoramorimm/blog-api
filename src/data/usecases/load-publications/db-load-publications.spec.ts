@@ -2,21 +2,25 @@ import { PublicationReturnedByDbModel } from '../../models/publication-returned-
 import { LoadPublicationsRepository } from '../../protocols/db/publication/load-publications-repository'
 import { DbLoadPublications } from './db-load-publications'
 
+const makeFakePublicationsReturnedByRepository = (): PublicationReturnedByDbModel[] => {
+  return [
+    {
+      id: 'any_id',
+      accountId: 'any_id',
+      publication: 'any_publication'
+    },
+    {
+      id: 'other_id',
+      accountId: 'other_id',
+      publication: 'other_publication'
+    }
+  ]
+}
+
 const makeFakeLoadPublicationsRepositoryStub = (): LoadPublicationsRepository => {
   class LoadPublicationsRepositoryStub implements LoadPublicationsRepository {
     async loadAll(accountId: string): Promise<PublicationReturnedByDbModel[]> {
-      const fakePublications: PublicationReturnedByDbModel[] = [
-        {
-          id: 'any_id',
-          accountId: 'any_id',
-          publication: 'any_publication'
-        },
-        {
-          id: 'other_id',
-          accountId: 'other_id',
-          publication: 'other_publication'
-        }
-      ]
+      const fakePublications: PublicationReturnedByDbModel[] = makeFakePublicationsReturnedByRepository()
 
       return await new Promise((resolve) => resolve(fakePublications))
     }
