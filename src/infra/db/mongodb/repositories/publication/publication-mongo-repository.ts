@@ -24,4 +24,16 @@ export class PublicationMongoRepository implements AddPublicationRepository {
       publicationReturnedByDb
     )
   }
+
+  async loadAll(accountId: string): Promise<PublicationReturnedByDbModel[]> {
+    const publicationsCollection = await MongoHelper.getCollection(
+      'publications'
+    )
+
+    const publications = await publicationsCollection
+      .find({ accountId })
+      .toArray()
+
+    return MongoHelper.makeAdapterForDefaultIdReturnedByDb(publications)
+  }
 }
