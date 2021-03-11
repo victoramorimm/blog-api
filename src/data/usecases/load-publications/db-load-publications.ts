@@ -8,6 +8,13 @@ export class DbLoadPublications implements LoadPublications {
   ) {}
 
   async load(accountId: string): Promise<PublicationReturnedByDb[]> {
-    return await this.loadPublicationsRepository.loadAll(accountId)
+    const publications = await this.loadPublicationsRepository.loadAll(
+      accountId
+    )
+
+    if (publications) {
+      return publications
+    }
+    return null
   }
 }
