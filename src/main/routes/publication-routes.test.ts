@@ -80,5 +80,14 @@ describe('Publication Routes', () => {
     test('Should return 403 on load publications without accessToken', async () => {
       await request(app).get('/api/publication').expect(403)
     })
+
+    test('Should return 204 on load publications with valid accessToken and none publication', async () => {
+      const accessToken = await makeAccessToken()
+
+      await request(app)
+        .get('/api/publication')
+        .set('x-access-token', accessToken)
+        .expect(204)
+    })
   })
 })
