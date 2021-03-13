@@ -34,10 +34,8 @@ export class PublicationMongoRepository
 
     const publications = await publicationsCollection.find().toArray()
 
-    if (publications || publications.length) {
-      return MongoHelper.makeAdapterForDefaultIdReturnedByDb(publications)
+    if (publications) {
+      return publications
     }
-
-    return null
   }
 }

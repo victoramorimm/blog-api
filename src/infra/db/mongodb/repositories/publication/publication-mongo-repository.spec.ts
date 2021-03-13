@@ -57,7 +57,7 @@ describe('Publication Mongo Repository', () => {
 
       const publications = await sut.loadAll()
 
-      expect(publications).toBeTruthy()
+      expect(publications.length).toBe(2)
       expect(publications[0].publication).toBe('any_publication')
       expect(publications[1].publication).toBe('other_publication')
     })
@@ -67,7 +67,7 @@ describe('Publication Mongo Repository', () => {
 
       const publications = await sut.loadAll()
 
-      expect(publications).toBeTruthy()
+      expect(publications.length).toBe(0)
     })
   })
 })
