@@ -55,7 +55,7 @@ describe('Publication Mongo Repository', () => {
 
       const sut = makeSut()
 
-      const publications = await sut.loadAll('any_id')
+      const publications = await sut.loadAll()
 
       expect(publications).toBeTruthy()
       expect(publications[0].publication).toBe('any_publication')
@@ -65,7 +65,7 @@ describe('Publication Mongo Repository', () => {
     test('Should load empty list', async () => {
       const sut = makeSut()
 
-      const publications = await sut.loadAll('any_id')
+      const publications = await sut.loadAll()
 
       expect(publications).toBeTruthy()
     })

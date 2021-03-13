@@ -4,14 +4,8 @@ import {
   HttpRequest,
   PublicationReturnedByDb
 } from './load-publications-controller-protocols'
-import { MissingParamError, ServerError } from '../../../errors'
-import {
-  badRequest,
-  noContent,
-  ok,
-  serverError,
-  notFound
-} from '../../../helpers/http'
+import { ServerError } from '../../../errors'
+import { noContent, ok, serverError, notFound } from '../../../helpers/http'
 
 const makeFakeHttpRequest = (): HttpRequest => ({
   params: {
@@ -36,7 +30,7 @@ const makeFakePublicationsReturnedByDb = (): PublicationReturnedByDb[] => {
 
 const makeLoadPublicationsStub = (): LoadPublications => {
   class LoadPublicationsStub implements LoadPublications {
-    async load(accountId: string): Promise<PublicationReturnedByDb[]> {
+    async load(): Promise<PublicationReturnedByDb[]> {
       const fakePublications: PublicationReturnedByDb[] = makeFakePublicationsReturnedByDb()
 
       return fakePublications
@@ -63,19 +57,7 @@ const makeSut = (): SutTypes => {
 }
 
 describe('LoadPublications Controller', () => {
-  test('Should return 400 if no accountId is provided as param on url', async () => {
-    const { sut } = makeSut()
-
-    const httpRequest: HttpRequest = {
-      params: {}
-    }
-
-    const httpResponse = await sut.handle(httpRequest)
-
-    expect(httpResponse).toEqual(badRequest(new MissingParamError('accountId')))
-  })
-
-  test('Should call LoadPublications with correct accountId', async () => {
+  test('Should call LoadPublications', async () => {
     const { sut, loadPublicationsStub } = makeSut()
 
     const loadSpy = jest.spyOn(loadPublicationsStub, 'load')
@@ -84,7 +66,7 @@ describe('LoadPublications Controller', () => {
 
     await sut.handle(httpRequest)
 
-    expect(loadSpy).toHaveBeenCalledWith('any_id')
+    expect(loadSpy).toHaveBeenCalled()
   })
 
   test('Should return 500 if LoadPublications throws', async () => {

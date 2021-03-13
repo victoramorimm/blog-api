@@ -21,7 +21,7 @@ const makeFakePublicationsReturnedByRepository = (): PublicationReturnedByDbMode
 
 const makeFakeLoadPublicationsRepositoryStub = (): LoadPublicationsRepository => {
   class LoadPublicationsRepositoryStub implements LoadPublicationsRepository {
-    async loadAll(accountId: string): Promise<PublicationReturnedByDbModel[]> {
+    async loadAll(): Promise<PublicationReturnedByDbModel[]> {
       const fakePublications: PublicationReturnedByDbModel[] = makeFakePublicationsReturnedByRepository()
 
       return await new Promise((resolve) => resolve(fakePublications))
@@ -48,14 +48,14 @@ const makeSut = (): SutTypes => {
 }
 
 describe('DbLoadPublications Usecase', () => {
-  test('Should call LoadPublicationsRepository with correct accountId', async () => {
+  test('Should call LoadPublicationsRepository', async () => {
     const { sut, loadPublicationsRepositoryStub } = makeSut()
 
     const loadAllSpy = jest.spyOn(loadPublicationsRepositoryStub, 'loadAll')
 
-    await sut.load('any_id')
+    await sut.load()
 
-    expect(loadAllSpy).toHaveBeenCalledWith('any_id')
+    expect(loadAllSpy).toHaveBeenCalled()
   })
 
   test('Should return null if LoadPublicationsRepository returns null', async () => {
@@ -65,7 +65,7 @@ describe('DbLoadPublications Usecase', () => {
       .spyOn(loadPublicationsRepositoryStub, 'loadAll')
       .mockReturnValueOnce(new Promise((resolve) => resolve(null)))
 
-    const publications = await sut.load('any_id')
+    const publications = await sut.load()
 
     expect(publications).toBeNull()
   })
@@ -79,7 +79,7 @@ describe('DbLoadPublications Usecase', () => {
         new Promise((resolve, reject) => reject(new Error()))
       )
 
-    const publications = sut.load('any_id')
+    const publications = sut.load()
 
     await expect(publications).rejects.toThrow()
   })
@@ -87,7 +87,7 @@ describe('DbLoadPublications Usecase', () => {
   test('Should return publications on success', async () => {
     const { sut } = makeSut()
 
-    const publications = await sut.load('any_id')
+    const publications = await sut.load()
 
     expect(publications).toEqual(makeFakePublicationsReturnedByRepository())
   })
@@ -99,7 +99,7 @@ describe('DbLoadPublications Usecase', () => {
       .spyOn(loadPublicationsRepositoryStub, 'loadAll')
       .mockReturnValueOnce(new Promise((resolve) => resolve([])))
 
-    const publications = await sut.load('any_id')
+    const publications = await sut.load()
 
     expect(publications).toEqual([])
   })

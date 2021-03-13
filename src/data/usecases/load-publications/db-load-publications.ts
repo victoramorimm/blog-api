@@ -9,10 +9,8 @@ export class DbLoadPublications implements LoadPublications {
     private readonly loadPublicationsRepository: LoadPublicationsRepository
   ) {}
 
-  async load(accountId: string): Promise<PublicationReturnedByDb[]> {
-    const publications = await this.loadPublicationsRepository.loadAll(
-      accountId
-    )
+  async load(): Promise<PublicationReturnedByDb[]> {
+    const publications = await this.loadPublicationsRepository.loadAll()
 
     if (publications) {
       return publications

@@ -1,10 +1,12 @@
+import { LoadPublicationsRepository } from '../../../../../data/usecases/load-publications/db-load-publications-protocols'
 import {
   PublicationReturnedByDbModel,
   AddPublicationRepository,
   MongoHelper
 } from './publication-mongo-repository-protocols'
 
-export class PublicationMongoRepository implements AddPublicationRepository {
+export class PublicationMongoRepository
+  implements AddPublicationRepository, LoadPublicationsRepository {
   async add(
     publication: string,
     accountId: string
@@ -25,14 +27,12 @@ export class PublicationMongoRepository implements AddPublicationRepository {
     )
   }
 
-  async loadAll(accountId: string): Promise<PublicationReturnedByDbModel[]> {
+  async loadAll(): Promise<PublicationReturnedByDbModel[]> {
     const publicationsCollection = await MongoHelper.getCollection(
       'publications'
     )
 
-    const publications = await publicationsCollection
-      .find({ accountId })
-      .toArray()
+    const publications = await publicationsCollection.find().toArray()
 
     if (publications || publications.length) {
       return MongoHelper.makeAdapterForDefaultIdReturnedByDb(publications)
