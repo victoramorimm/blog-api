@@ -7,6 +7,19 @@ import env from '../config/env'
 
 let publicationCollection: Collection
 
+export const insertPublicationsOnInMemoryDb = async (): Promise<any> => {
+  return await publicationCollection.insertMany([
+    {
+      publication: 'any_publication',
+      accountId: 'any_id'
+    },
+    {
+      publication: 'other_publication',
+      accountId: 'any_id'
+    }
+  ])
+}
+
 let accountCollection: Collection
 
 const makeAccessToken = async (): Promise<string> => {
@@ -88,6 +101,17 @@ describe('Publication Routes', () => {
         .get('/api/publication')
         .set('x-access-token', accessToken)
         .expect(204)
+    })
+
+    test('Should return 200 on load publications with valid accessToken and some publications', async () => {
+      const accessToken = await makeAccessToken()
+
+      await insertPublicationsOnInMemoryDb()
+
+      await request(app)
+        .get('/api/publication')
+        .set('x-access-token', accessToken)
+        .expect(200)
     })
   })
 })
