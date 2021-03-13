@@ -69,4 +69,10 @@ describe('Publication Routes', () => {
         .expect(200)
     })
   })
+
+  describe('GET /publication', () => {
+    test('Should return 403 on load publications without accessToken', async () => {
+      await request(app).get('/api/publication').expect(403)
+    })
+  })
 })
