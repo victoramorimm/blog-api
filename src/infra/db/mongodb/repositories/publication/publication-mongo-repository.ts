@@ -34,6 +34,10 @@ export class PublicationMongoRepository implements AddPublicationRepository {
       .find({ accountId })
       .toArray()
 
-    return MongoHelper.makeAdapterForDefaultIdReturnedByDb(publications)
+    if (publications.length) {
+      return MongoHelper.makeAdapterForDefaultIdReturnedByDb(publications)
+    }
+
+    return null
   }
 }
