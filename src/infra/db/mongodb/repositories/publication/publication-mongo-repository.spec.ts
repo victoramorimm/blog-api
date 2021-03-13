@@ -4,7 +4,7 @@ import { MongoHelper } from './publication-mongo-repository-protocols'
 
 let publicationCollection: Collection
 
-export const insertPublicationsOnDbInMemory = async (): Promise<any> => {
+export const insertPublicationsOnInDbMemory = async (): Promise<any> => {
   return await publicationCollection.insertMany([
     {
       publication: 'any_publication',
@@ -53,13 +53,21 @@ describe('Publication Mongo Repository', () => {
     test('Should load all publications on loadAll success', async () => {
       const sut = makeSut()
 
-      await insertPublicationsOnDbInMemory()
+      await insertPublicationsOnInDbMemory()
 
       const publications = await sut.loadAll('any_id')
 
       expect(publications).toBeTruthy()
       expect(publications[0].publication).toBe('any_publication')
       expect(publications[1].publication).toBe('other_publication')
+    })
+
+    test('Should return null if loadAll fails', async () => {
+      const sut = makeSut()
+
+      const publications = await sut.loadAll('any_id')
+
+      expect(publications).toBeNull()
     })
   })
 })
